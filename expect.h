@@ -28,7 +28,7 @@ would appreciate credit if this program or parts of it are used.
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * RCS: @(#) $Id: expect.h,v 5.32 2010/07/01 00:53:49 eee Exp $
  */
 
 #ifndef _TCL
@@ -290,7 +290,7 @@ typedef struct Tcl_RegExp_ *Tcl_RegExp;
  * Caveat:  this is V8 regexp(3) [actually, a reimplementation thereof],
  * not the System V one.
  *
- * RCS: @(#) $Id$
+ * RCS: @(#) $Id: expect.h,v 5.32 2010/07/01 00:53:49 eee Exp $
  */
 
 #ifndef _REGEXP

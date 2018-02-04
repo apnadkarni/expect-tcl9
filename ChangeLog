@@ -1,3 +1,14 @@
+2018-02-04  Nils Carlson <nils.carlson@ludd.ltu.se>
+
+	* exp_inter.c: [https://sourceforge.net/p/expect/patches/22/]
+	Fix interact bug - handle reads of 0 length on
+	non-blocking channels by explicitly checking if the channel
+	is non-blocking. Fix by Jack Bates.
+
+	* expect.c: [https://sourceforge.net/p/expect/patches/21/]
+	Fix eof bug introduced with previous bug fix - ensure that data
+	received just before an eof is processed. Fix by Sergei Golovan.
+
 2014-05-01  Andreas Kupries <andreask@activestate.com>
 
 	* exp_main_sub.c: Updated EXP_VERSION to 5.45.3

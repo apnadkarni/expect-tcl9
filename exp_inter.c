@@ -1433,7 +1433,7 @@ Exp_InteractObjCmd(
 	switch (rc) {
 	    case EXP_DATA_NEW:
 		cc = intRead(interp,u,1,0,key);
-		if (cc > 0) break;
+		if (cc > 0 || Tcl_InputBlocked(u->channel)) break;
 
 		rc = EXP_EOF;
 		/*

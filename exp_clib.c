@@ -78,7 +78,7 @@ would appreciate credit if this program or parts of it are used.
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * RCS: @(#) $Id: exp_clib.c,v 5.38 2010/07/01 00:53:49 eee Exp $
  */
 
 #ifndef _STDLIB
@@ -165,7 +165,7 @@ extern unsigned long	strtoul _ANSI_ARGS_((CONST char *string,
  * *** 2. This in addition to changes to TclRegError makes the   ***
  * ***    code multi-thread safe.                                ***
  *
- * RCS: @(#) $Id$
+ * RCS: @(#) $Id: exp_clib.c,v 5.38 2010/07/01 00:53:49 eee Exp $
  */
 
 #if 0

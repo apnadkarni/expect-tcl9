@@ -1861,7 +1861,7 @@ expRead(
 	/* try to read it */
 	cc = expIRead(interp,esPtr,timeout,tcl_set_flags);
 	
-	if (Tcl_Eof(esPtr->channel)) {
+	if (cc == 0 && Tcl_Eof(esPtr->channel)) {
 	    cc = EXP_EOF;
 	}
     } else if (cc == EXP_DATA_OLD) {
