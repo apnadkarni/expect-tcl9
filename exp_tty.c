@@ -18,6 +18,9 @@
 #endif
 #include <sys/types.h>
 
+/* Needed for Mac */
+#include <termios.h>
+
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -37,6 +40,7 @@
 #include "exp_command.h"
 #include "exp_log.h"
 #include "exp_win.h"
+#include "exp_event.h"
 
 static int is_raw = FALSE;
 static int is_noecho = FALSE;
@@ -759,7 +763,7 @@ Exp_SystemCmd(
 			(char *) NULL);
 		abnormalExit = TRUE;
 	    } else if (WIFSIGNALED(waitStatus)) {
-		CONST char *p;
+		const char *p;
 	
 		p = Tcl_SignalMsg((int) (WTERMSIG(waitStatus)));
 		Tcl_SetErrorCode(interp, "CHILDKILLED", msg1,
@@ -768,7 +772,7 @@ Exp_SystemCmd(
 		Tcl_AppendResult(interp, "child killed: ", p, "\n",
 			(char *) NULL);
 	    } else if (WIFSTOPPED(waitStatus)) {
-		CONST char *p;
+		const char *p;
 
 		p = Tcl_SignalMsg((int) (WSTOPSIG(waitStatus)));
 		Tcl_SetErrorCode(interp, "CHILDSUSP", msg1,

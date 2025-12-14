@@ -37,6 +37,26 @@ would appreciate credit if this program or parts of it are used.
 #define FALSE 0
 #endif
 
+#if !defined(TCL_VARARGS)
+#  if defined(__STDC__) || defined(HAVE_STDARG_H)
+#   include <stdarg.h>
+#   define TCL_VARARGS(type, name) (type name, ...)
+#   define TCL_VARARGS_DEF(type, name) (type name, ...)
+#   define TCL_VARARGS_START(type, name, list) (va_start(list, name), name)
+#  else
+#   include <varargs.h>
+#   ifdef __cplusplus
+#	define TCL_VARARGS(type, name) (type name, ...)
+#	define TCL_VARARGS_DEF(type, name) (type va_alist, ...)
+#   else
+#	define TCL_VARARGS(type, name) ()
+#	define TCL_VARARGS_DEF(type, name) (va_alist)
+#   endif
+#   define TCL_VARARGS_START(type, name, list) \
+	(va_start(list), va_arg(list, type))
+#  endif /* use stdarg.h */
+#  endif /* use stdarg.h */
+
 static int simple_interactor (Tcl_Interp *interp, ClientData data);
 static int zero (Tcl_Interp *interp, char *string);
 
@@ -50,7 +70,7 @@ static Dbg_OutputProc *printproc = 0;
 static ClientData printdata = 0;
 static int stdinmode;
 
-static void print _ANSI_ARGS_(TCL_VARARGS(Tcl_Interp *,interp));
+static void print TCL_VARARGS(Tcl_Interp *,interp);
 
 static int debugger_active = FALSE;
 
@@ -382,8 +402,8 @@ char *argv[];
 	arg_index = 1;
 	
 	while (argc && (space > 0)) {
-		CONST char *elementPtr;
-		CONST char *nextPtr;
+		const char *elementPtr;
+		const char *nextPtr;
 		int wrap;
 
 		/* braces/quotes have been stripped off arguments */
@@ -398,7 +418,7 @@ char *argv[];
 #if TCL_MAJOR_VERSION >= 8
 					      -1,
 #endif
-				&elementPtr,&nextPtr,(int *)0,(int *)0);
+				&elementPtr,&nextPtr,(Tcl_Size) 0,(Tcl_Size) 0);
 			if (*elementPtr == '\0') wrap = TRUE;
 			else if (*nextPtr == '\0') wrap = FALSE;
 			else wrap = TRUE;
@@ -443,7 +463,7 @@ Tcl_Obj *objv[];
 {
     char **argv;
     int argc;
-    int len;
+    Tcl_Size len;
     argv = (char **)ckalloc(objc+1 * sizeof(char *));
     for (argc=0 ; argc<objc ; argc++) {
 	argv[argc] = Tcl_GetStringFromObj(objv[argc],&len);
@@ -487,7 +507,7 @@ Tcl_Interp *interp;
 CallFrame *curf;	/* current FramePtr */
 CallFrame *viewf;	/* view FramePtr */
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 char *level;
 {
 	PrintStackBelow(interp,curf,viewf);
@@ -544,14 +564,14 @@ enum debug_cmd cmdtype;
 /* debugger's trace handler */
 
 static int
-debugger_trap _ANSI_ARGS_ ((
+debugger_trap (
      ClientData clientData,
      Tcl_Interp *interp,
      int level,
-     CONST char *command,
+     const char *command,
      Tcl_Command commandInfo,
      int objc,
-     struct Tcl_Obj * CONST * objv));
+     struct Tcl_Obj * const * objv);
 
 
 /*ARGSUSED*/
@@ -562,10 +582,10 @@ debugger_trap(clientData,interp,level,command,commandInfo,objc,objv)
      int level;			/* positive number if called by Tcl, -1 if */
 				/* called by Dbg_On in which case we don't */
 				/* know the level */
-     CONST char *command;
+     const char *command;
      Tcl_Command commandInfo; /* Unused */
      int objc;
-     struct Tcl_Obj * CONST * objv;
+     struct Tcl_Obj * const * objv;
 {
 	char level_text[6];	/* textual representation of level */
 
@@ -734,7 +754,7 @@ cmdNext(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 {
 	debug_new_action = TRUE;
 	debug_cmd = *(enum debug_cmd *)clientData;
@@ -758,7 +778,7 @@ cmdDir(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 {
     char* frame;
     debug_cmd = *(enum debug_cmd *)clientData;
@@ -780,7 +800,7 @@ cmdSimple(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 {
 	debug_new_action = TRUE;
 	debug_cmd = *(enum debug_cmd *)clientData;
@@ -831,7 +851,7 @@ cmdWhere(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 {
     static char* options [] = {
 	"-compress",
@@ -903,7 +923,7 @@ cmdBreak(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 {
 	struct breakpoint *b;
 	char *error_msg;
@@ -1111,7 +1131,7 @@ cmdHelp(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 {
 	char **hp;
 
@@ -1255,7 +1275,7 @@ zero (Tcl_Interp *interp, char *string)
 	return 0;
 }
 
-extern int expSetBlockModeProc _ANSI_ARGS_((int fd, int mode));
+extern int expSetBlockModeProc (int fd, int mode);
 
 static int
 simple_interactor(Tcl_Interp *interp, ClientData data)
@@ -1288,7 +1308,7 @@ simple_interactor(Tcl_Interp *interp, ClientData data)
 			   version */
 
 			static int nextid = 0;
-			CONST char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
+			const char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
 			if (nextidstr) {
 				sscanf(nextidstr,"%d",&nextid);
 			}

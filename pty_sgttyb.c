@@ -9,6 +9,8 @@ would appreciate credit if this program or parts of it are used.
 */
 
 #include <stdio.h>		/* tmp for debugging */
+#include <stdlib.h>
+#include <string.h>
 #include <signal.h>
 
 #if defined(SIGCLD) && !defined(SIGCHLD)
@@ -21,6 +23,7 @@ would appreciate credit if this program or parts of it are used.
 #include <sys/file.h>
 #include <signal.h>
 #include <setjmp.h>
+#include "tcl.h"
 #include "expect_cf.h"
 #include "exp_rename.h"
 #include "exp_tty_in.h"

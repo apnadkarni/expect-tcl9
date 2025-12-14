@@ -318,11 +318,11 @@ typedef struct regexp {
 	char program[1];	/* Unwarranted chumminess with compiler. */
 } regexp;
 
-EXTERN regexp *TclRegComp _ANSI_ARGS_((char *exp));
-EXTERN int TclRegExec _ANSI_ARGS_((regexp *prog, char *string, char *start));
-EXTERN void TclRegSub _ANSI_ARGS_((regexp *prog, char *source, char *dest));
-EXTERN void exp_TclRegError _ANSI_ARGS_((char *msg));
-EXTERN char *TclGetRegError _ANSI_ARGS_((void));
+EXTERN regexp *TclRegComp (char *exp);
+EXTERN int TclRegExec (regexp *prog, char *string, char *start);
+EXTERN void TclRegSub (regexp *prog, char *source, char *dest);
+EXTERN void exp_TclRegError (char *msg);
+EXTERN char *TclGetRegError (void);
 
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLIMPORT
@@ -392,27 +392,27 @@ EXTERN int exp_is_debugging;
 EXTERN int exp_loguser;
 
 EXTERN void (*exp_close_in_child)();	/* procedure to close files in child */
-EXTERN void exp_slave_control _ANSI_ARGS_((int,int));
+EXTERN void exp_slave_control (int,int);
 EXTERN int exp_logfile_all;
 EXTERN FILE *exp_debugfile;
 EXTERN FILE *exp_logfile;
-extern void exp_debuglog _ANSI_ARGS_(TCL_VARARGS(char *,fmt));
-extern void exp_errorlog _ANSI_ARGS_(TCL_VARARGS(char *,fmt));
+extern void exp_debuglog (char * fmt,...);
+extern void exp_errorlog (char * fmt,...);
 
-EXTERN int exp_disconnect _ANSI_ARGS_((void));
-EXTERN FILE *exp_popen	_ANSI_ARGS_((char *command));
-EXTERN void (*exp_child_exec_prelude) _ANSI_ARGS_((void));
+EXTERN int exp_disconnect (void);
+EXTERN FILE *exp_popen	(char *command);
+EXTERN void (*exp_child_exec_prelude) (void);
 
 #ifndef EXP_DEFINE_FNS
-EXTERN int exp_spawnl	_ANSI_ARGS_(TCL_VARARGS(char *,file));
-EXTERN int exp_expectl	_ANSI_ARGS_(TCL_VARARGS(int,fd));
-EXTERN int exp_fexpectl	_ANSI_ARGS_(TCL_VARARGS(FILE *,fp));
+EXTERN int exp_spawnl	(char * file,...);
+EXTERN int exp_expectl	(int fd,...);
+EXTERN int exp_fexpectl	(FILE * fp,...);
 #endif
 
-EXTERN int exp_spawnv	_ANSI_ARGS_((char *file, char *argv[]));
-EXTERN int exp_expectv	_ANSI_ARGS_((int fd, struct exp_case *cases));
-EXTERN int exp_fexpectv	_ANSI_ARGS_((FILE *fp, struct exp_case *cases));
+EXTERN int exp_spawnv	(char *file, char *argv[]);
+EXTERN int exp_expectv	(int fd, struct exp_case *cases);
+EXTERN int exp_fexpectv	(FILE *fp, struct exp_case *cases);
 
-EXTERN int exp_spawnfd	_ANSI_ARGS_((int fd));
+EXTERN int exp_spawnfd	(int fd);
 
 #endif /* _EXPECT_H */

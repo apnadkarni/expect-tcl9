@@ -165,7 +165,8 @@ init_traps(RETSIGTYPE (*traps[])())
 /* Do not terminate format strings with \n!!! */
 /*VARARGS*/
 void
-exp_error TCL_VARARGS_DEF(Tcl_Interp *,arg1)
+/*exp_error TCL_VARARGS_DEF(Tcl_Interp *,arg1)*/
+exp_error (Tcl_Interp * arg1,...)
 /*exp_error(va_alist)*/
 /*va_dcl*/
 {
@@ -173,8 +174,9 @@ exp_error TCL_VARARGS_DEF(Tcl_Interp *,arg1)
     char *fmt;
     va_list args;
     char buffer[2000];
-
-    interp = TCL_VARARGS_START(Tcl_Interp *,arg1,args);
+/* TCL_VARARGS_START(type, name, list) (va_start(list, name), name) */
+   /* interp = TCL_VARARGS_START(Tcl_Interp *,arg1,args); */
+    interp = (va_start(args, arg1), arg1);
     fmt = va_arg(args,char *);
     vsprintf(buffer,fmt,args);
     Tcl_SetResult(interp,buffer,TCL_VOLATILE);
@@ -224,7 +226,7 @@ expStateFromChannelName(
 {
     ExpState *esPtr;
     Tcl_Channel channel;
-    CONST char *chanName;
+    const char *chanName;
 
     if (any) {
 	if (0 == strcmp(name,EXP_SPAWN_ID_ANY_LIT)) {
@@ -576,7 +578,7 @@ Exp_SpawnObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     ExpState *esPtr = 0;
     int slave;
@@ -612,7 +614,7 @@ Exp_SpawnObjCmd(
     char *chanName = 0;
     int leaveopen = FALSE;
     int rc, wc;
-    CONST char *stty_init;
+    const char *stty_init;
     int slave_write_ioctls = 1;
     /* by default, slave will be write-ioctled this many times */
     int slave_opens = 3;
@@ -1371,7 +1373,7 @@ Exp_ExpPidObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     char *chanName = 0;
     ExpState *esPtr = 0;
@@ -1421,7 +1423,7 @@ Exp_GetpidDeprecatedObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     expDiagLog("getpid is deprecated, use pid\r\n");
     Tcl_SetObjResult (interp, Tcl_NewIntObj (getpid()));
@@ -1434,7 +1436,7 @@ Exp_SleepObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     double s;
 
@@ -1466,7 +1468,7 @@ get_slow_args(
     struct slow_arg *x)
 {
     int sc;		/* return from scanf */
-    CONST char *s = exp_get_var(interp,"send_slow");
+    const char *s = exp_get_var(interp,"send_slow");
     if (!s) {
 	exp_error(interp,"send -s: send_slow has no value");
 	return(-1);
@@ -1537,7 +1539,7 @@ get_human_args(
     struct human_arg *x)
 {
     int sc;		/* return from scanf */
-    CONST char *s = exp_get_var(interp,"send_human");
+    const char *s = exp_get_var(interp,"send_human");
 
     if (!s) {
 	exp_error(interp,"send -h: send_human has no value");
@@ -1837,7 +1839,7 @@ exp_i_parse_states(
 {
     struct ExpState *esPtr;
     char *p = i->value;
-    int argc;
+    Tcl_Size argc;
     char **argv;
     int j;
 
@@ -1917,7 +1919,7 @@ Exp_SendLogObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     static char* options[] = { "--", NULL };
     enum options { LOG_QUOTE };
@@ -1960,8 +1962,8 @@ static int
 Exp_SendObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    int objc,
-    Tcl_Obj *CONST objv[])
+    Tcl_Size objc,
+    Tcl_Obj *const objv[])
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
     ExpState *esPtr = 0;
@@ -1977,7 +1979,7 @@ Exp_SendObjCmd(
     int send_style = SEND_STYLE_PLAIN;
     int want_cooked = TRUE;
     char *string;		/* string to send */
-    int len = -1;		/* length of string to send */
+    Tcl_Size len = -1;		/* length of string to send */
     int zeros;		/* count of how many ascii zeros to send */
 
     char *chanName = 0;
@@ -2159,7 +2161,7 @@ Exp_LogFileObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     static char resultbuf[1000];
     char *chanName = 0;
@@ -2292,7 +2294,7 @@ Exp_LogUserObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int old_loguser = expLogUserGet();
 
@@ -2324,7 +2326,7 @@ Exp_DebugObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int now = FALSE;	/* soon if FALSE, now if TRUE */
     int exp_tcl_debugger_was_available = exp_tcl_debugger_available;
@@ -2394,7 +2396,7 @@ Exp_ExpInternalObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int newChannel = FALSE;
     Tcl_Channel oldChannel;
@@ -2473,8 +2475,8 @@ static int
 Exp_ExitObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Size objc,
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int value = 0;
 
@@ -2486,7 +2488,7 @@ Exp_ExitObjCmd(
 	    objc--;
 	    objv++;
 	    if (objc) {
-		int len;
+		Tcl_Size len;
 		char* act = Tcl_GetStringFromObj (objv[0], &len);
 
 		if (exp_onexit_action)
@@ -2530,12 +2532,12 @@ Exp_ConfigureObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])	/* Argument objects. */
+    Tcl_Obj *const objv[])	/* Argument objects. */
 {
     /* Magic configuration stuff. */
     int i, opt, val;
 
-    static CONST84 char* options [] = {
+    static const char* options [] = {
 	"-strictwrite", NULL
     };
     enum options {
@@ -2571,7 +2573,7 @@ Exp_CloseObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[]) 	/* Argument objects. */
+    Tcl_Obj *const objv[]) 	/* Argument objects. */
 {
     int onexec_flag = FALSE;	/* true if -onexec seen */
     int close_onexec;
@@ -2682,10 +2684,10 @@ tcl_tracer(
     ClientData clientData,
     Tcl_Interp *interp,
     int level,
-    CONST char *command,
+    const char *command,
     Tcl_Command cmdInfo,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int i;
 
@@ -2709,7 +2711,7 @@ Exp_StraceObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     static int trace_level = 0;
     static Tcl_Trace trace_handle;
@@ -2863,7 +2865,7 @@ Exp_WaitObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     char *chanName = 0;
     struct ExpState *esPtr;
@@ -3076,7 +3078,7 @@ Exp_ForkObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int rc;
     if (objc > 1) {
@@ -3110,7 +3112,7 @@ Exp_DisconnectObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
     
@@ -3220,7 +3222,7 @@ Exp_OverlayObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int newfd, oldfd;
     int dash_name = 0;
@@ -3311,7 +3313,7 @@ Exp_InterpreterObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     Tcl_Obj *eofObj = 0;
     int i;
@@ -3359,7 +3361,7 @@ Exp_ExpContinueObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     if (objc == 1) {
 	return EXP_CONTINUE;
@@ -3379,7 +3381,7 @@ Exp_InterReturnObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])
+    Tcl_Obj *const objv[])
 {
     /* let Tcl's return command worry about args */
     /* if successful (i.e., TCL_RETURN is returned) */
@@ -3400,7 +3402,7 @@ Exp_OpenObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     ExpState *esPtr;
     char *chanName = 0;

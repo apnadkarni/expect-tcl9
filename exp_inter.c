@@ -714,12 +714,12 @@ int
 Exp_InteractObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    int objc,
-    Tcl_Obj *CONST initial_objv[])		/* Argument objects. */
+    Tcl_Size objc,
+    Tcl_Obj *const initial_objv[])		/* Argument objects. */
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
-    Tcl_Obj *CONST *objv_copy;	/* original, for error messages */
+    Tcl_Obj *const *objv_copy;	/* original, for error messages */
     Tcl_Obj **objv = (Tcl_Obj **) initial_objv;
     char *string;
     Tcl_UniChar *ustring;

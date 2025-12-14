@@ -31,6 +31,9 @@ would appreciate credit if this program or parts of it are used.
 # endif
 #endif
 
+/* Needed for Mac */
+#include <termios.h>
+
 #include <signal.h>
 #include <setjmp.h>
 #include <sys/file.h>
@@ -302,11 +305,11 @@ exp_pty_lock(
  * ones that call expDiagLog from the two different environments.
  */
 
-static void		(*expDiagLogPtrVal) _ANSI_ARGS_((char *));
+static void		(*expDiagLogPtrVal) (char *);
 
 void
 expDiagLogPtrSet(fn)
-     void (*fn) _ANSI_ARGS_((char *));
+     void (*fn) (char *);
 {
   expDiagLogPtrVal = fn;
 }
@@ -351,7 +354,7 @@ expDiagLogPtrStrStr(fmt,str1,str2)
   (*expDiagLogPtrVal)(buf);
 }
 
-static char *		(*expErrnoMsgVal) _ANSI_ARGS_((int));
+static char *		(*expErrnoMsgVal) (int);
 
 char *
 expErrnoMsg(errorNo)
@@ -362,7 +365,7 @@ int errorNo;
 
 void
 expErrnoMsgSet(fn)
-     char * (*fn) _ANSI_ARGS_((int));
+     char * (*fn) (int);
 {
   expErrnoMsgVal = fn;
 }

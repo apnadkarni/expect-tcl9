@@ -14,6 +14,6 @@ int exp_pty_test(char *master_name, char *slave_name, char bank, char *num);
 void exp_pty_unlock(void);
 int exp_pty_lock(char bank, char *num);
 int exp_getptymaster(void);
-int exp_getptyslave(int ttycopy, int ttyinit, CONST char *stty_args);
+int exp_getptyslave(int ttycopy, int ttyinit, const char *stty_args);
 
 extern char *exp_pty_slave_name;

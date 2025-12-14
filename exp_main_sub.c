@@ -66,6 +66,12 @@ int exp_getpid;
 
 int exp_strict_write = 0;
 
+int
+exp_tty_cooked_echo(
+    Tcl_Interp *interp,
+    exp_tty *tty_old,
+    int *was_raw,
+    int *was_echo);
 
 static void
 usage(interp)
@@ -158,7 +164,7 @@ Tcl_Interp *interp;
        maintain our own static version */
 
     static int nextid = 0;
-    CONST char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
+    const char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
     if (nextidstr) {
 	/* intentionally ignore failure */
 	(void) sscanf(nextidstr,"%d",&nextid);
@@ -179,7 +185,7 @@ Exp_Prompt1ObjCmd(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
 int objc;
-Tcl_Obj *CONST objv[];		/* Argument objects. */
+Tcl_Obj *const objv[];		/* Argument objects. */
 {
     static char buffer[200];
 
@@ -196,7 +202,7 @@ Exp_Prompt2ObjCmd(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
 int objc;
-Tcl_Obj *CONST objv[];
+Tcl_Obj *const objv[];
 {
     Tcl_SetResult(interp,prompt2_default,TCL_STATIC);
     return(TCL_OK);
@@ -432,7 +438,7 @@ Exp_ExpVersionObjCmd(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
      int objc;
-     Tcl_Obj *CONST objv[];		/* Argument objects. */
+     Tcl_Obj *const objv[];		/* Argument objects. */
 {
 	int emajor, umajor;
 	char *user_version;	/* user-supplied version string */
@@ -542,7 +548,7 @@ Tcl_Interp *interp;
       return TCL_ERROR;
     }
 #else
-    if (Tcl_InitStubs(interp, "8.1", 0) == NULL) {
+    if (Tcl_InitStubs(interp, "8.6-", 0) == NULL) {
       return TCL_ERROR;
     }
 #endif
@@ -815,7 +821,7 @@ char **argv;
 					exp_cmdfilename = 0;
 					expCloseOnExec(fileno(exp_cmdfile));
 				} else {
-					CONST char *msg;
+					const char *msg;
 
 					if (errno == 0) {
 						msg = "could not read - odd file name?";

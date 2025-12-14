@@ -47,7 +47,7 @@ static struct trap {
 				/* is processed */
 	int code;		/* return our new code instead of code */
 				/* available when signal is processed */
-	CONST char *name;	/* name of signal */
+	const char *name;	/* name of signal */
 	int reserved;		/* if unavailable for trapping */
 } traps[NSIG];
 
@@ -63,7 +63,7 @@ static int got_sig;		/* this records the last signal received */
 
 static Tcl_AsyncHandler async_handler;
 
-static CONST char *
+static const char *
 signal_to_string(sig)
 int sig;
 {
@@ -277,7 +277,7 @@ Tcl_Interp *interp;
 char *s;
 {
 	int sig;
-	CONST char *name;
+	const char *name;
 
 	/* try interpreting as an integer */
 	if (1 == sscanf(s,"%d",&sig)) {
@@ -301,10 +301,10 @@ Exp_TrapObjCmd(clientData, interp, objc, objv)
 ClientData clientData;
 Tcl_Interp *interp;
 int objc;
-Tcl_Obj *CONST objv[];
+Tcl_Obj *const objv[];
 {
 	char *action = 0;
-	int n;		/* number of signals in list */
+	Tcl_Size n;		/* number of signals in list */
 	Tcl_Obj **list;	/* list of signals */
 	char *arg;
 	int len;	/* length of action */
@@ -509,7 +509,7 @@ int oldcode;
 
 		if (eip) {
 		  /* odd that Tcl doesn't have a call that does all this at once */
-		  int len;
+		  Tcl_Size len;
 		  char *s = Tcl_GetStringFromObj(eip,&len);
 		  Tcl_AddObjErrorInfo(interp,s,len);
 		  Tcl_DecrRefCount(eip);

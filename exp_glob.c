@@ -17,12 +17,12 @@ would appreciate credit if this program or parts of it are used.
 
 /* Proper forward declaration of internal function */
 static int
-Exp_StringCaseMatch2 _ANSI_ARGS_((CONST Tcl_UniChar *string, /* String. */
-				  CONST Tcl_UniChar *stop,   /* First char _after_ string */
-				  CONST Tcl_UniChar *pattern,	 /* Pattern, which may contain
+Exp_StringCaseMatch2 (const Tcl_UniChar *string, /* String. */
+				  const Tcl_UniChar *stop,   /* First char _after_ string */
+				  const Tcl_UniChar *pattern,	 /* Pattern, which may contain
 								  * special characters. */
-				  CONST Tcl_UniChar *pstop,   /* First char _after_ pattern */
-				  int nocase));
+				  const Tcl_UniChar *pstop,   /* First char _after_ pattern */
+				  int nocase);
 
 /* The following functions implement expect's glob-style string matching */
 /* Exp_StringMatch allow's implements the unanchored front (or conversely */
@@ -37,9 +37,9 @@ Exp_StringCaseMatch(string, strlen, pattern, plen, nocase, offset)		/* INTL */
      int nocase;
      int *offset;	/* offset in chars from beginning of string where pattern matches */
 {
-    CONST Tcl_UniChar *s;
-    CONST Tcl_UniChar *stop = string + strlen;
-    CONST Tcl_UniChar *pstop = pattern + plen;
+    const Tcl_UniChar *s;
+    const Tcl_UniChar *stop = string + strlen;
+    const Tcl_UniChar *pstop = pattern + plen;
     int ssm, sm;	/* count of bytes matched or -1 */
     int caret = FALSE;
     int star = FALSE;
@@ -124,16 +124,16 @@ Exp_StringCaseMatch(string, strlen, pattern, plen, nocase, offset)		/* INTL */
 
 static int
 Exp_StringCaseMatch2(string,stop,pattern,pstop,nocase)	/* INTL */
-     register CONST Tcl_UniChar *string; /* String. */
-     register CONST Tcl_UniChar *stop;   /* First char _after_ string */
-     register CONST Tcl_UniChar *pattern;	 /* Pattern, which may contain
+     register const Tcl_UniChar *string; /* String. */
+     register const Tcl_UniChar *stop;   /* First char _after_ string */
+     register const Tcl_UniChar *pattern;	 /* Pattern, which may contain
 				 * special characters. */
-     register CONST Tcl_UniChar *pstop;   /* First char _after_ pattern */
+     register const Tcl_UniChar *pstop;   /* First char _after_ pattern */
     int nocase;
 {
     Tcl_UniChar ch1, ch2, p;
     int match = 0;	/* # of bytes matched */
-    CONST Tcl_UniChar *oldString;
+    const Tcl_UniChar *oldString;
 
 #ifdef EXP_INTERNAL_TRACE_GLOB
     expDiagLog("    ESCM2 pattern=\"");
@@ -177,7 +177,7 @@ Exp_StringCaseMatch2(string,stop,pattern,pstop,nocase)	/* INTL */
 	 */
 	
 	if (*pattern == '*') {
-	    CONST Tcl_UniChar *tail;
+	    const Tcl_UniChar *tail;
 
 	    /*
 	     * Skip all successive *'s in the pattern

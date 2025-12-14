@@ -8,11 +8,11 @@
 char *
 memmove(dest,src,n)
 VOID *dest;
-CONST VOID *src;
+const VOID *src;
 int n;
 {
 	char *d;
-	CONST char *s;
+	const char *s;
 
 	d = dest;
 	s = src;

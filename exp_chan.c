@@ -35,22 +35,27 @@
 #include "exp_prog.h"
 #include "exp_command.h"
 #include "exp_log.h"
+#include "exp_event.h"
 #include "tcldbg.h" /* Dbg_StdinMode */
 
-extern int		expSetBlockModeProc _ANSI_ARGS_((int fd, int mode));
-static int		ExpBlockModeProc _ANSI_ARGS_((ClientData instanceData,
-			    int mode));
-static int		ExpCloseProc _ANSI_ARGS_((ClientData instanceData,
-			    Tcl_Interp *interp));
-static int		ExpInputProc _ANSI_ARGS_((ClientData instanceData,
-		            char *buf, int toRead, int *errorCode));
-static int		ExpOutputProc _ANSI_ARGS_((
+extern int		expSetBlockModeProc (int fd, int mode);
+static int		ExpBlockModeProc (ClientData instanceData,
+			    int mode);
+static int		ExpCloseProc (ClientData instanceData,
+			    Tcl_Interp *interp);
+static int		ExpClose2Proc (ClientData instanceData,
+			    Tcl_Interp *interp);
+static int		ExpInputProc (ClientData instanceData,
+		            char *buf, int toRead, int *errorCode);
+static int		ExpOutputProc (
 			    ClientData instanceData, char *buf, int toWrite,
-                            int *errorCode));
-static void		ExpWatchProc _ANSI_ARGS_((ClientData instanceData,
-		            int mask));
-static int		ExpGetHandleProc _ANSI_ARGS_((ClientData instanceData,
-		            int direction, ClientData *handlePtr));
+                            int *errorCode);
+static void		ExpWatchProc (ClientData instanceData,
+		            int mask);
+static int		ExpGetHandleProc (ClientData instanceData,
+		            int direction, ClientData *handlePtr);
+static int		ExpThreadActionProc (ClientData instanceData,
+		            int action);
 
 /*
  * This structure describes the channel type structure for Expect-based IO:
@@ -58,16 +63,25 @@ static int		ExpGetHandleProc _ANSI_ARGS_((ClientData instanceData,
 
 Tcl_ChannelType expChannelType = {
     "exp",				/* Type name. */
-    ExpBlockModeProc,			/* Set blocking/nonblocking mode.*/
-    ExpCloseProc,			/* Close proc. */
+    (Tcl_ChannelTypeVersion)TCL_CHANNEL_VERSION_5,	/* Version. */
+    #if TCL_MAJOR_VERSION < 9
+    ExpCloseProc,			 /* Close proc. */
+#else
+    NULL,
+#endif
     ExpInputProc,			/* Input proc. */
     ExpOutputProc,			/* Output proc. */
-    NULL,				/* Seek proc. */
-    NULL,				/* Set option proc. */
-    NULL,				/* Get option proc. */
+    NULL,				/* Seek. */
+    NULL,
+    NULL,
     ExpWatchProc,			/* Initialize notifier. */
     ExpGetHandleProc,			/* Get OS handles out of channel. */
-    NULL,				/* Close2 proc */
+    ExpClose2Proc,			 /* Close proc. */
+    ExpBlockModeProc,			/* Set blocking/nonblocking mode.*/
+    NULL, /* FlushProc. Must be NULL as per Tcl docs */
+    NULL, /* HandlerProc. Only valid for stacked channels */
+    NULL, /* WideSeekProc. */
+    NULL,
 };
 
 typedef struct ThreadSpecificData {
@@ -83,7 +97,6 @@ typedef struct ThreadSpecificData {
 } ThreadSpecificData;
 
 static Tcl_ThreadDataKey dataKey;
-
 /*
  *----------------------------------------------------------------------
  *
@@ -310,6 +323,63 @@ ExpOutputProc(instanceData, buf, toWrite, errorCodePtr)
 /*ARGSUSED*/
 static int
 ExpCloseProc(instanceData, interp)
+    ClientData instanceData;	/* Exp state. */
+    Tcl_Interp *interp;		/* For error reporting - unused. */
+{
+    ExpState *esPtr = (ExpState *) instanceData;
+    ExpState **nextPtrPtr;
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+
+    esPtr->registered = FALSE;
+
+#if 0
+    /*
+      Really should check that we created one first.  Since we're sharing fds
+      with Tcl, perhaps a filehandler was created with a plain tcl file - we
+      wouldn't want to delete that.  Although if user really close Expect's
+      user_spawn_id, it probably doesn't matter anyway.
+    */
+
+    Tcl_DeleteFileHandler(esPtr->fdin);
+#endif /*0*/
+
+    Tcl_Free((char*)esPtr->input.buffer);
+    Tcl_DecrRefCount (esPtr->input.newchars);
+
+    /* Actually file descriptor should have been closed earlier. */
+    /* So do nothing here */
+
+    /*
+     * Conceivably, the process may not yet have been waited for.  If this
+     * becomes a requirement, we'll have to revisit this code.  But for now, if
+     * it's just Tcl exiting, the processes will exit on their own soon
+     * anyway.
+     */
+
+    for (nextPtrPtr = &(tsdPtr->firstExpPtr); (*nextPtrPtr) != NULL;
+	 nextPtrPtr = &((*nextPtrPtr)->nextPtr)) {
+	if ((*nextPtrPtr) == esPtr) {
+	    (*nextPtrPtr) = esPtr->nextPtr;
+	    break;
+	}
+    }
+    tsdPtr->channelCount--;
+
+    if (esPtr->bg_status == blocked ||
+	    esPtr->bg_status == disarm_req_while_blocked) {
+	esPtr->freeWhenBgHandlerUnblocked = 1;
+	/*
+	 * If we're in the middle of a bg event handler, then the event
+	 * handler will have to take care of freeing esPtr.
+	 */
+    } else {
+	expStateFree(esPtr);
+    }
+    return 0;
+}
+/*ARGSUSED*/
+static int
+ExpClose2Proc(instanceData, interp)
     ClientData instanceData;	/* Exp state. */
     Tcl_Interp *interp;		/* For error reporting - unused. */
 {

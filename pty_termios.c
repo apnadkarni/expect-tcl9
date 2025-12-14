@@ -633,7 +633,7 @@ int
 exp_getptyslave(
     int ttycopy,
     int ttyinit,
-    CONST char *stty_args)
+    const char *stty_args)
 {
 	int slave, slave2;
 	char buf[10240];

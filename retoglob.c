@@ -8,34 +8,34 @@
 #define DEBUG 0
 
 static void
-ExpChopNested _ANSI_ARGS_ ((Tcl_UniChar** xstr,
+ExpChopNested (Tcl_UniChar** xstr,
 			    int*          xstrlen,
 			    Tcl_UniChar   open,
-			    Tcl_UniChar   close));
+			    Tcl_UniChar   close);
 
 static Tcl_UniChar*
-ExpLiteral _ANSI_ARGS_ ((Tcl_UniChar* nexto,
+ExpLiteral (Tcl_UniChar* nexto,
 			 Tcl_UniChar* str,
-			 int          strlen));
+			 int          strlen);
 
 static Tcl_UniChar*
-ExpCollapseStar _ANSI_ARGS_ ((Tcl_UniChar* src,
-			      Tcl_UniChar* last));
+ExpCollapseStar (Tcl_UniChar* src,
+			      Tcl_UniChar* last);
 static Tcl_UniChar*
-ExpCollapseQForward _ANSI_ARGS_ ((Tcl_UniChar* src,
-				  Tcl_UniChar* last));
+ExpCollapseQForward (Tcl_UniChar* src,
+				  Tcl_UniChar* last);
 
 static Tcl_UniChar*
-ExpCollapseQBack _ANSI_ARGS_ ((Tcl_UniChar* src,
-			       Tcl_UniChar* last));
+ExpCollapseQBack (Tcl_UniChar* src,
+			       Tcl_UniChar* last);
 
 static Tcl_UniChar
-ExpBackslash _ANSI_ARGS_ ((char prefix,
+ExpBackslash (char prefix,
 			 Tcl_UniChar* str,
-			 int          strlen));
+			 int          strlen);
 
 static int
-ExpCountStar _ANSI_ARGS_ ((Tcl_UniChar* src, Tcl_UniChar* last));
+ExpCountStar (Tcl_UniChar* src, Tcl_UniChar* last);
 
 
 static char*
@@ -100,7 +100,7 @@ exp_retoglob (
 #define CHOPC(c) {while (*str != (c) && strlen) CHOP(1) ;}
 #define EMIT(c)  {lastsz = 1; *nexto++ = (c);}
 #define EMITX(c) {lastsz++;   *nexto++ = (c);}
-#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == Tcl_UniCharNcmp (str,(lit),sizeof(lit)/sizeof (Tcl_UniChar))))
+#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == Tcl_UtfNcmp (str,(lit),sizeof(lit)/sizeof (Tcl_UniChar))))
 #define MATCHC(c) (strlen && (*str == (c)))
 #define PUSHPAREN {*nextp++ = nexto;}
 #define UNEMIT {nexto -= lastsz; lastsz = -1;}

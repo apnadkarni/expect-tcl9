@@ -115,11 +115,11 @@ static int initialized = 0;
  * Static routines defined in this file.
  */
 
-static void		InitNotifier _ANSI_ARGS_((void));
-static void		NotifierExitHandler _ANSI_ARGS_((
-			    ClientData clientData));
-static int		FileHandlerEventProc _ANSI_ARGS_((Tcl_Event *evPtr,
-			    int flags));
+static void		InitNotifier (void);
+static void		NotifierExitHandler (
+			    ClientData clientData);
+static int		FileHandlerEventProc (Tcl_Event *evPtr,
+			    int flags);
 
 /*
  *----------------------------------------------------------------------

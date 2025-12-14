@@ -55,9 +55,9 @@ int exp_default_close_on_eof =  TRUE;
 #define EXPECT_TIMEOUT		"timeout"
 #define EXPECT_OUT		"expect_out"
 
-extern int Exp_StringCaseMatch _ANSI_ARGS_((Tcl_UniChar *string, int strlen,
+extern int Exp_StringCaseMatch (Tcl_UniChar *string, int strlen,
 					    Tcl_UniChar *pattern,int plen,
-					    int nocase,int *offset));
+					    int nocase,int *offset);
 
 typedef struct ThreadSpecificData {
     int timeout;
@@ -276,16 +276,16 @@ Tcl_Obj*
 exp_eval_with_one_arg(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     Tcl_Obj* res = Tcl_NewListObj (1,objv);
 
 #define NUM_STATIC_OBJS 20
     Tcl_Token *tokenPtr;
-    CONST char *p;
-    CONST char *next;
+    const char *p;
+    const char *next;
     int rc;
-    int bytesLeft, numWords;
+    Tcl_Size bytesLeft, numWords;
     Tcl_Parse parse;
 
     /*
@@ -324,9 +324,9 @@ exp_eval_with_one_arg(
 	    for (tokenPtr = parse.tokenPtr; numWords > 0;
 		 numWords--, tokenPtr += (tokenPtr->numComponents + 1)) {
 		/* FUTURE: Save token information, do substitution later */
+		Tcl_Obj* w = Tcl_EvalTokensStandard(interp, tokenPtr+1,
+			tokenPtr->numComponents); 
 
-		Tcl_Obj* w = Tcl_EvalTokens(interp, tokenPtr+1,
-			tokenPtr->numComponents);
 		/* w has refCount 1 here, if not NULL */
 		if (w == NULL) {
 		    Tcl_DecrRefCount (res);
@@ -335,7 +335,7 @@ exp_eval_with_one_arg(
 
 		}
 		Tcl_ListObjAppendElement (interp, res, w);
-		Tcl_DecrRefCount (w); /* Local reference goes away */
+		Tcl_DecrRefCount (w); 
 	    }
 	}
 
@@ -409,7 +409,7 @@ parse_expect_args(
     struct exp_cmd_descriptor *eg,
     ExpState *default_esPtr,	/* suggested ExpState if called as expect_user or _tty */
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int i;
     char *string;
@@ -490,7 +490,7 @@ parse_expect_args(
 		{
 		    Tcl_Obj* g;
 		    Tcl_UniChar* str;
-		    int strlen;
+		    Tcl_Size strlen;
 
 		    str = Tcl_GetUnicodeFromObj (objv[i], &strlen);
 		    g = exp_retoglob (str, strlen);
@@ -852,7 +852,7 @@ eval_case_string(
 	expDiagLog("\"? ");
 
 	if (e->gate) {
-	    int plen;
+	    Tcl_Size plen;
 	    Tcl_UniChar* pat = Tcl_GetUnicodeFromObj(e->gate,&plen);
 
 	    expDiagLog("Gate \"");
@@ -915,7 +915,7 @@ eval_case_string(
 	expDiagLogU(expPrintify(Tcl_GetString(e->pat)));
 	expDiagLog("\"? ");
 	if (str) {
-	    int plen;
+	    Tcl_Size plen;
 	    Tcl_UniChar* pat = Tcl_GetUnicodeFromObj(e->pat,&plen);
 
 	    match = Exp_StringCaseMatch(str,numchars, pat, plen,
@@ -932,7 +932,7 @@ eval_case_string(
 	}
 	expDiagLogU(no);
     } else if (e->use == PAT_EXACT) {
-	int patLength;
+	Tcl_Size patLength;
 	char *pat = Tcl_GetStringFromObj(e->pat, &patLength);
 	Tcl_UniChar *p;
 
@@ -958,7 +958,7 @@ eval_case_string(
 	    return(EXP_MATCH);
 	} else expDiagLogU(no);
     } else if (e->use == PAT_NULL) {
-	CONST Tcl_UniChar *p;
+	const Tcl_UniChar *p;
 	expDiagLogU("null? ");
 	p = string_first_char (str, 0); /* NEW function in this file, see above */
 
@@ -1297,7 +1297,7 @@ expect_info(
     Tcl_Interp *interp,
     struct exp_cmd_descriptor *ecmd,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     struct exp_i *exp_i;
     int i;
@@ -1384,8 +1384,8 @@ int
 Exp_ExpectGlobalObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Size objc,
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int result = TCL_OK;
     struct exp_i *exp_i, **eip;
@@ -2058,7 +2058,7 @@ static int
 get_timeout(Tcl_Interp *interp)
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-    CONST char *t;
+    const char *t;
 
     if (NULL != (t = exp_get_var(interp,EXPECT_TIMEOUT))) {
 	tsdPtr->timeout = atoi(t);
@@ -2525,8 +2525,8 @@ int
 Exp_ExpectObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Size objc,
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int cc;			/* number of chars returned in a single read */
 				/* or negative EXP_whatever */
@@ -2783,7 +2783,7 @@ Exp_TimestampObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
 	char *format = 0;
 	time_t seconds = -1;
@@ -2869,23 +2869,23 @@ Exp_TimestampObjCmd(
  */
 
 static int
-process_di _ANSI_ARGS_ ((Tcl_Interp* interp,
+process_di (Tcl_Interp* interp,
 			 int objc,
-			 Tcl_Obj *CONST objv[],		/* Argument objects. */
+			 Tcl_Obj *const objv[],		/* Argument objects. */
 			 int* at,
 			 int* Default,
 			 ExpState **esOut,
-			 CONST char* cmd));
+			 const char* cmd);
 
 static int
 process_di (
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[],		/* Argument objects. */
+    Tcl_Obj *const objv[],		/* Argument objects. */
     int* at,
     int* Default,
     ExpState **esOut,
-    CONST char* cmd)
+    const char* cmd)
 {
     static char* options[] = {
 	"-d",
@@ -2963,7 +2963,7 @@ Exp_MatchMaxObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int size = -1;
     ExpState *esPtr = 0;
@@ -3009,7 +3009,7 @@ Exp_RemoveNullsObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int value = -1;
     ExpState *esPtr = 0;
@@ -3053,7 +3053,7 @@ Exp_ParityObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int parity;
     ExpState *esPtr = 0;
@@ -3092,7 +3092,7 @@ Exp_CloseOnEofObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int close_on_eof;
     ExpState *esPtr = 0;
@@ -3192,7 +3192,7 @@ cmdX(
     ClientData clientData,
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *CONST objv[])		/* Argument objects. */
+    Tcl_Obj *const objv[])		/* Argument objects. */
 {
 	exp_cmds_print();
 	return TCL_OK;
