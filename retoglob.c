@@ -100,7 +100,7 @@ exp_retoglob (
 #define CHOPC(c) {while (*str != (c) && strlen) CHOP(1) ;}
 #define EMIT(c)  {lastsz = 1; *nexto++ = (c);}
 #define EMITX(c) {lastsz++;   *nexto++ = (c);}
-#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == Tcl_UtfNcmp (str,(lit),sizeof(lit)/sizeof (Tcl_UniChar))))
+#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == Tcl_UniCharNcmp (str,(lit),sizeof(lit)/sizeof (Tcl_UniChar))))
 #define MATCHC(c) (strlen && (*str == (c)))
 #define PUSHPAREN {*nextp++ = nexto;}
 #define UNEMIT {nexto -= lastsz; lastsz = -1;}

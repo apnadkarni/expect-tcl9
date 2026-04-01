@@ -176,7 +176,7 @@ expStdoutLog (int arg1,...)
 
     if ((!tsdPtr->logUser) && (!force_stdout) && (!tsdPtr->logAll)) return;
 
-    (void) vsprintf(bigbuf,fmt,args);
+    (void) vsnprintf(bigbuf,sizeof(bigbuf),fmt,args);
     expDiagWriteBytes(bigbuf,-1);
     if (tsdPtr->logAll || (LOGUSER && tsdPtr->logChannel)) Tcl_WriteChars(tsdPtr->logChannel,bigbuf,-1);
     if (LOGUSER) fprintf(stdout,"%s",bigbuf);
@@ -222,7 +222,7 @@ expErrorLog (char * arg1,...)
     va_list args;
 
     fmt = (va_start(args, arg1), arg1);
-    (void) vsprintf(bigbuf,fmt,args);
+    (void) vsnprintf(bigbuf,sizeof(bigbuf),fmt,args);
 
     expDiagWriteChars(bigbuf,-1);
     fprintf(stderr,"%s",bigbuf);
@@ -264,7 +264,7 @@ expDiagLog (char * arg1,...)
 
     fmt = (va_start(args, arg1), arg1);
 
-    (void) vsprintf(bigbuf,fmt,args);
+    (void) vsnprintf(bigbuf,sizeof(bigbuf),fmt,args);
 
     expDiagWriteBytes(bigbuf,-1);
     if (tsdPtr->diagToStderr) {
@@ -307,7 +307,7 @@ expPrintf (char * arg1,...)
   int len, rc;
 
   fmt = (va_start(args, arg1), arg1);
-  len = vsprintf(bigbuf,arg1,args);
+  len = vsnprintf(bigbuf,sizeof(bigbuf),arg1,args);
  retry:
   rc = write(2,bigbuf,len);
   if ((rc == -1) && (errno == EAGAIN)) goto retry;
@@ -499,7 +499,7 @@ expLogChannelOpen(interp,filename,append)
 	Tcl_DStringAppend(&tsdPtr->logFilename,filename,-1);
     }
 
-    tsdPtr->logChannel = Tcl_OpenFileChannel(interp,newfilename,mode,0777);
+    tsdPtr->logChannel = Tcl_OpenFileChannel(interp,newfilename,mode,0666);
     if (!tsdPtr->logChannel) {
 	Tcl_DStringFree(&tsdPtr->logFilename);
 	return TCL_ERROR;

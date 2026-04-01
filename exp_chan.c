@@ -44,11 +44,11 @@ static int		ExpBlockModeProc (ClientData instanceData,
 static int		ExpCloseProc (ClientData instanceData,
 			    Tcl_Interp *interp);
 static int		ExpClose2Proc (ClientData instanceData,
-			    Tcl_Interp *interp);
+			    Tcl_Interp *interp, int whatever);
 static int		ExpInputProc (ClientData instanceData,
 		            char *buf, int toRead, int *errorCode);
 static int		ExpOutputProc (
-			    ClientData instanceData, char *buf, int toWrite,
+			    ClientData instanceData, const char *buf, int toWrite,
                             int *errorCode);
 static void		ExpWatchProc (ClientData instanceData,
 		            int mask);
@@ -271,7 +271,7 @@ ExpInputProc(instanceData, buf, toRead, errorCodePtr)
 static int
 ExpOutputProc(instanceData, buf, toWrite, errorCodePtr)
     ClientData instanceData;		/* Exp state. */
-    char *buf;				/* The data buffer. */
+    const char *buf;				/* The data buffer. */
     int toWrite;			/* How many bytes to write? */
     int *errorCodePtr;			/* Where to store error code. */
 {
@@ -379,9 +379,10 @@ ExpCloseProc(instanceData, interp)
 }
 /*ARGSUSED*/
 static int
-ExpClose2Proc(instanceData, interp)
+ExpClose2Proc(instanceData, interp, whatever)
     ClientData instanceData;	/* Exp state. */
     Tcl_Interp *interp;		/* For error reporting - unused. */
+    int whatever; /* whatever - unused */
 {
     ExpState *esPtr = (ExpState *) instanceData;
     ExpState **nextPtrPtr;

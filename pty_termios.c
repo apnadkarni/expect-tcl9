@@ -9,6 +9,9 @@ would appreciate credit if you use this file or parts of it.
 
 #include <stdio.h>
 #include <signal.h>
+#include <pty.h>
+
+extern char * expErrnoMsg    (int);
 
 #if defined(SIGCLD) && !defined(SIGCHLD)
 #define SIGCHLD SIGCLD

@@ -33,6 +33,11 @@ set timeout 60
 
 set env(TERM) vt100	;# actual value doesn't matter, just has to be set
 
+if {[file executable /usr/bin/telnet] == 0} {
+	send_user "It seems that telnet is not installed. Please install telnet in order to use this script.\n"
+	exit 1
+}
+
 spawn telnet rainmaker.wunderground.com 3000
 while {1} {
 	expect timeout {

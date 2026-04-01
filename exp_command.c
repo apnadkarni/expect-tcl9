@@ -359,7 +359,7 @@ exp_close(
 	     */
 
 	    ThreadSpecificData* tsdPtr = TCL_TSD_INIT(&dataKey);
-	    char*               cName  = Tcl_GetChannelName(esPtr->chan_orig->channel_orig);
+	    const char*         cName  = Tcl_GetChannelName(esPtr->chan_orig->channel_orig);
 	    Tcl_HashEntry*      entry  = Tcl_FindHashEntry(&tsdPtr->origins,cName);
 	    ExpOrigin*          orig   = (ExpOrigin*) Tcl_GetHashValue(entry);
 
@@ -1962,7 +1962,7 @@ static int
 Exp_SendObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Size objc,
+    int objc,
     Tcl_Obj *const objv[])
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -2475,7 +2475,7 @@ static int
 Exp_ExitObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Size objc,
+    int objc,
     Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int value = 0;

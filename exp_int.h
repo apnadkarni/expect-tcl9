@@ -27,7 +27,7 @@ void	expDiagLogPtr       (char *);
 void	expDiagLogPtrX      (char *,int);
 void	expDiagLogPtrStr    (char *,char *);
 void	expDiagLogPtrStrStr (char *,char *,char *);
-void	expErrnoMsgSet      (char * (*) (int));
+void	expErrnoMsgSet      (const char * (*) (int));
 char * expErrnoMsg    (int);
 
 #ifdef NO_STDLIB_H

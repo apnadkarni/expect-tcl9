@@ -163,8 +163,8 @@ static char *exp_indirect_update1( /* 1-part Tcl variable names */
 static char *exp_indirect_update2( /* 2-part Tcl variable names */
     ClientData clientData,
     Tcl_Interp *interp,	/* Interpreter containing variable. */
-    char *name1,	/* Name of variable. */
-    char *name2,	/* Second part of variable name. */
+    const char *name1,	/* Name of variable. */
+    const char *name2,	/* Second part of variable name. */
     int flags);		/* Information about what happened. */
 
 #ifdef SIMPLE_EVENT
@@ -185,9 +185,9 @@ free_ecase(
 {
     if (ec->i_list->duration == EXP_PERMANENT) {
 	if (ec->pat)  { Tcl_DecrRefCount(ec->pat); }
-	if (ec->gate) { Tcl_DecrRefCount(ec->gate); }
 	if (ec->body) { Tcl_DecrRefCount(ec->body); }
     }
+    if (ec->gate) { Tcl_DecrRefCount(ec->gate); }
 
     if (free_ilist) {
 	ec->i_list->ecount--;
@@ -324,8 +324,9 @@ exp_eval_with_one_arg(
 	    for (tokenPtr = parse.tokenPtr; numWords > 0;
 		 numWords--, tokenPtr += (tokenPtr->numComponents + 1)) {
 		/* FUTURE: Save token information, do substitution later */
-		Tcl_Obj* w = Tcl_EvalTokensStandard(interp, tokenPtr+1,
+		int r = Tcl_EvalTokensStandard(interp, tokenPtr+1,
 			tokenPtr->numComponents); 
+		Tcl_Obj* w = (r == TCL_OK) ? Tcl_GetObjResult(interp) : NULL;
 
 		/* w has refCount 1 here, if not NULL */
 		if (w == NULL) {
@@ -1384,7 +1385,7 @@ int
 Exp_ExpectGlobalObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Size objc,
+    int objc,
     Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int result = TCL_OK;
@@ -2121,8 +2122,8 @@ static char *
 exp_indirect_update2(
     ClientData clientData,
     Tcl_Interp *interp,	/* Interpreter containing variable. */
-    char *name1,	/* Name of variable. */
-    char *name2,	/* Second part of variable name. */
+    const char *name1,	/* Name of variable. */
+    const char *name2,	/* Second part of variable name. */
     int flags)		/* Information about what happened. */
 {
 	char *msg;
@@ -2359,7 +2360,12 @@ expMatchProcess(
 
 	/* "!e" means no case matched - transfer by default */
 	if (!e || e->transfer) {
-	    int remainder = numchars-match;
+	    int remainder;
+	    if (match > numchars) {
+		match = numchars;
+		eo->matchlen = match;
+	    }
+	    remainder = numchars-match;
 	    /* delete matched chars from input buffer */
 	    esPtr->printed -= match;
 	    if (numchars != 0) {
@@ -2525,7 +2531,7 @@ int
 Exp_ExpectObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Size objc,
+    int objc,
     Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int cc;			/* number of chars returned in a single read */

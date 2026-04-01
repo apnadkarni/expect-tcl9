@@ -136,7 +136,7 @@ using the date command while running autoexpect is a sure way to
 produce a script that will require editing in order for it to work.
 
 The \-p flag puts autoexpect into "prompt mode".  In this mode,
-autoexpect will only look for the the last line of program output \-
+autoexpect will only look for the last line of program output \-
 which is usually the prompt.  This handles the date problem (see
 above) and most others.
 

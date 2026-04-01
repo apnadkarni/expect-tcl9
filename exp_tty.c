@@ -374,7 +374,7 @@ Exp_SttyCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int argc,
-    char **argv)
+    const char **argv)
 {
 	/* redirection symbol is not counted as a stty arg in terms */
 	/* of recognition. */
@@ -573,7 +573,7 @@ Exp_SystemCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int argc,
-    char **argv)
+    const char **argv)
 {
 	int result = TCL_OK;
 	RETSIGTYPE (*old)();	/* save old sigalarm handler */
