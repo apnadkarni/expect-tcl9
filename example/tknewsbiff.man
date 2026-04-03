@@ -177,7 +177,7 @@ The "server" variable names an NNTP news-server.
 The default is "news".  The "server" variable is
 only used if the "active_file" variable is not set.
 
-The "server_timeout" variable describes how how many seconds to wait
+The "server_timeout" variable describes how many seconds to wait
 for a response from the server before giving up.  -1 means wait
 forever or until the server itself times out.  The default is 60
 seconds.

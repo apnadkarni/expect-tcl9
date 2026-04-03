@@ -19,16 +19,20 @@ would appreciate credit if this program or parts of it are used.
 #define memcpy(x,y,len) bcopy(y,x,len)
 #endif
 
+#include <limits.h>
 #include <errno.h>
 
 void	exp_console_set     (void);
-void	expDiagLogPtrSet    (void (*)(char *));
+void	expDiagLogPtrSet    (void (*)(const char *));
 void	expDiagLogPtr       (char *);
 void	expDiagLogPtrX      (char *,int);
 void	expDiagLogPtrStr    (char *,char *);
 void	expDiagLogPtrStrStr (char *,char *,char *);
-void	expErrnoMsgSet      (char * (*) (int));
-char * expErrnoMsg    (int);
+void	expErrnoMsgSet      (const char * (*) (int));
+const char *expErrnoMsg     (int);
+
+int	expListGetElements  (Tcl_Interp *interp, Tcl_Obj *objPtr,
+			        int *objcPtr, Tcl_Obj ***objvPtr);
 
 #ifdef NO_STDLIB_H
 #  include "../compat/stdlib.h"

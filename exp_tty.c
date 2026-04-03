@@ -281,15 +281,17 @@ exp_tty_break(
 /* to write send_user strings without always putting in \r. */
 /* If len == 0, use strlen to compute it */
 /* NB: if terminal is not in raw mode, nothing is done. */
-char *
+/* Return must be const char * since s passed in may be const */
+/* TODO - not all callers free memory that may be allocated by exp_cook */
+const char *
 exp_cook(
-    char *s,
-    int *len)	/* current and new length of s */
+    const char *s,
+    Tcl_Size *len)	/* current and new length of s */
 {
 	static int destlen = 0;
 	static char *dest = 0;
 	char *d;		/* ptr into dest */
-	unsigned int need;
+	size_t need;
 
 	if (s == 0) return("<null>");
 
@@ -320,7 +322,7 @@ static int		/* returns TCL_whatever */
 exec_stty(
     Tcl_Interp *interp,
     int argc,
-    char **argv,
+    const char **argv,
     int devtty)		/* if true, redirect to /dev/tty */
 {
 	int i;
@@ -364,6 +366,8 @@ exec_stty(
 		char *ec = Tcl_GetVar(interp,"errorCode",TCL_GLOBAL_ONLY);
 		if (ec && !streq(ec,"NONE")) return TCL_ERROR;
 	}
+#else
+	(void) rc; /* silence warning about unused variable */
 #endif
 	return TCL_OK;
 }
@@ -374,7 +378,7 @@ Exp_SttyCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int argc,
-    char **argv)
+    const char **argv)
 {
 	/* redirection symbol is not counted as a stty arg in terms */
 	/* of recognition. */
@@ -386,11 +390,11 @@ Exp_SttyCmd(
 	int cooked = FALSE;
 	int was_raw, was_echo;
 
-	char **redirect;	/* location of "<" */
-	char *infile = 0;
+	const char **redirect;	/* location of "<" */
+	const char *infile = 0;
 	int fd;			/* (slave) fd of infile */
 	int master = -1;	/* master fd of infile */
-	char **argv0 = argv;
+	const char **argv0 = argv;
 
 	for (argv=argv0+1;*argv;argv++) {
 		if (argv[0][0] == '<') {
@@ -511,7 +515,7 @@ Exp_SttyCmd(
 		/* a different tty */
 
 		/* temporarily zap redirect */
-		char *redirect_save = *redirect;
+		const char *redirect_save = *redirect;
 		*redirect = 0;
 
 		for (argv=argv0+1;*argv;argv++) {
@@ -573,7 +577,7 @@ Exp_SystemCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int argc,
-    char **argv)
+    const char **argv)
 {
 	int result = TCL_OK;
 	RETSIGTYPE (*old)();	/* save old sigalarm handler */

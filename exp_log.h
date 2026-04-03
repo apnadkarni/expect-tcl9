@@ -1,10 +1,10 @@
 /* exp_log.h */
 
 extern void		expErrorLog (char *,...);
-extern void		expErrorLogU (char *);
+extern void		expErrorLogU (const char *);
 
 extern void		expStdoutLog (int,...);
-extern void		expStdoutLogU (char *buf, int force_stdout);
+extern void		expStdoutLogU (const char *buf, int force_stdout);
 
 EXTERN void		expDiagInit (void);
 EXTERN int		expDiagChannelOpen (Tcl_Interp *,char *);
@@ -13,13 +13,13 @@ EXTERN void		expDiagChannelClose (Tcl_Interp *);
 EXTERN char *		expDiagFilename (void);
 EXTERN int		expDiagToStderrGet (void);
 EXTERN void		expDiagToStderrSet (int);
-EXTERN void		expDiagWriteBytes (char *,int);
-EXTERN void		expDiagWriteChars (char *,int);
+EXTERN void		expDiagWriteBytes (const char *,int);
+EXTERN void		expDiagWriteChars (const char *,int);
 EXTERN void		expDiagWriteObj (Tcl_Obj *);
 EXTERN void		expDiagLog (char *,...);
-EXTERN void		expDiagLogU (char *);
+EXTERN void		expDiagLogU (const char *);
 
-EXTERN char *		expPrintify (char *);
+EXTERN char *		expPrintify (const char *);
 EXTERN char *		expPrintifyUni (Tcl_UniChar *,int);
 EXTERN char *		expPrintifyObj (Tcl_Obj *);
 EXTERN void		expPrintf (char *,...);
@@ -38,7 +38,7 @@ EXTERN void		expLogAllSet (int);
 EXTERN int		expLogAllGet (void);
 EXTERN void		expLogToStdoutSet (int);
 EXTERN int		expLogToStdoutGet (void);
-EXTERN void		expLogDiagU (char *);
+EXTERN void		expLogDiagU (const char *);
 EXTERN int		expWriteBytesAndLogIfTtyU (ExpState *,Tcl_UniChar *,int);
 
 EXTERN int		expLogUserGet (void);

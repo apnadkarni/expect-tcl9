@@ -623,7 +623,7 @@ patterns are specified as with Tcl's
 command.  (Such patterns are also similar to C-shell regular expressions
 usually referred to as "glob" patterns).  The
 .B \-gl
-flag may may
+flag may
 be used to protect patterns that might otherwise match
 .B expect
 flags from doing so.

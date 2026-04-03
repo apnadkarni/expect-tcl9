@@ -163,8 +163,8 @@ static char *exp_indirect_update1( /* 1-part Tcl variable names */
 static char *exp_indirect_update2( /* 2-part Tcl variable names */
     ClientData clientData,
     Tcl_Interp *interp,	/* Interpreter containing variable. */
-    char *name1,	/* Name of variable. */
-    char *name2,	/* Second part of variable name. */
+    const char *name1,	/* Name of variable. */
+    const char *name2,	/* Second part of variable name. */
     int flags);		/* Information about what happened. */
 
 #ifdef SIMPLE_EVENT
@@ -185,9 +185,9 @@ free_ecase(
 {
     if (ec->i_list->duration == EXP_PERMANENT) {
 	if (ec->pat)  { Tcl_DecrRefCount(ec->pat); }
-	if (ec->gate) { Tcl_DecrRefCount(ec->gate); }
 	if (ec->body) { Tcl_DecrRefCount(ec->body); }
     }
+    if (ec->gate) { Tcl_DecrRefCount(ec->gate); }
 
     if (free_ilist) {
 	ec->i_list->ecount--;
@@ -284,7 +284,6 @@ exp_eval_with_one_arg(
     Tcl_Token *tokenPtr;
     const char *p;
     const char *next;
-    int rc;
     Tcl_Size bytesLeft, numWords;
     Tcl_Parse parse;
 
@@ -307,7 +306,8 @@ exp_eval_with_one_arg(
     do {
 	if (Tcl_ParseCommand(interp, p, bytesLeft, 0, &parse)
 	        != TCL_OK) {
-	    rc = TCL_ERROR;
+	    Tcl_DecrRefCount (res);
+	    res = NULL;
 	    goto done;
 	}
 	numWords = parse.numWords;
@@ -324,8 +324,9 @@ exp_eval_with_one_arg(
 	    for (tokenPtr = parse.tokenPtr; numWords > 0;
 		 numWords--, tokenPtr += (tokenPtr->numComponents + 1)) {
 		/* FUTURE: Save token information, do substitution later */
-		Tcl_Obj* w = Tcl_EvalTokensStandard(interp, tokenPtr+1,
+		int r = Tcl_EvalTokensStandard(interp, tokenPtr+1,
 			tokenPtr->numComponents); 
+		Tcl_Obj* w = (r == TCL_OK) ? Tcl_GetObjResult(interp) : NULL;
 
 		/* w has refCount 1 here, if not NULL */
 		if (w == NULL) {
@@ -1384,7 +1385,7 @@ int
 Exp_ExpectGlobalObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Size objc,
+    int objc,
     Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int result = TCL_OK;
@@ -1414,7 +1415,10 @@ Exp_ExpectGlobalObjCmd(
 
     if (new_cmd) {
 	/* Replace old arguments with result of the reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, (Tcl_Obj***) &objv);
+	if (expListGetElements (interp, new_cmd, &objc, (Tcl_Obj***) &objv) != TCL_OK) {
+	    Tcl_DecrRefCount(new_cmd);
+	    return TCL_ERROR;
+	}
     }
 
     if (objc > 1 && (Tcl_GetString(objv[1])[0] == '-')) {
@@ -1762,13 +1766,12 @@ expIRead( /* INTL */
     int save_flags)
 {
     int cc = EXP_TIMEOUT;
-    int size;
 
     /* We drop one third when are at least 2/3 full */
     /* condition is (size >= max*2/3) <=> (size*3 >= max*2) */
     if (expSizeGet(esPtr)*3 >= esPtr->input.max*2)
 	exp_buffer_shuffle(interp,esPtr,save_flags,EXPECT_OUT,"expect");
-    size = expSizeGet(esPtr);
+    (void) expSizeGet(esPtr);
 
 #ifdef SIMPLE_EVENT
  restart:
@@ -2042,12 +2045,12 @@ which looks in the global space if they are not in the local space.
 This allows the user to localize them if desired, and also to
 avoid having to put "global" in procedure definitions.
 */
-char *
+const char *
 exp_get_var(
     Tcl_Interp *interp,
-    char *var)
+    const char *var)
 {
-    char *val;
+    const char *val;
 
     if (NULL != (val = Tcl_GetVar(interp,var,0 /* local */)))
 	return(val);
@@ -2121,8 +2124,8 @@ static char *
 exp_indirect_update2(
     ClientData clientData,
     Tcl_Interp *interp,	/* Interpreter containing variable. */
-    char *name1,	/* Name of variable. */
-    char *name2,	/* Second part of variable name. */
+    const char *name1,	/* Name of variable. */
+    const char *name2,	/* Second part of variable name. */
     int flags)		/* Information about what happened. */
 {
 	char *msg;
@@ -2359,7 +2362,12 @@ expMatchProcess(
 
 	/* "!e" means no case matched - transfer by default */
 	if (!e || e->transfer) {
-	    int remainder = numchars-match;
+	    int remainder;
+	    if (match > numchars) {
+		match = numchars;
+		eo->matchlen = match;
+	    }
+	    remainder = numchars-match;
 	    /* delete matched chars from input buffer */
 	    esPtr->printed -= match;
 	    if (numchars != 0) {
@@ -2525,7 +2533,7 @@ int
 Exp_ExpectObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Size objc,
+    int objc,
     Tcl_Obj *const objv[])		/* Argument objects. */
 {
     int cc;			/* number of chars returned in a single read */
@@ -2580,14 +2588,18 @@ Exp_ExpectObjCmd(
 
     if (new_cmd) {
 	/* Replace old arguments with result of the reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, (Tcl_Obj***) &objv);
+	if (expListGetElements(interp, new_cmd, &objc, (Tcl_Obj ***)&objv)) {
+	    Tcl_DecrRefCount (new_cmd);
+	    return TCL_ERROR;
+	}
     }
 
     Tcl_GetTime (&temp_time);
     start_time_total = temp_time.sec;
     start_time = start_time_total;
+    (void)start_time; /* Avoid compiler warn of never used. TODO */
     reset_timer = TRUE;
-    
+
     if (&StdinoutPlaceholder == (ExpState *)clientData) {
 	clientData = (ClientData) expStdinoutGet();
     } else if (&DevttyPlaceholder == (ExpState *)clientData) {
@@ -2899,7 +2911,7 @@ process_di (
     int def = FALSE;
     char* chan = NULL;
     int i;
-    ExpState *esPtr;
+    ExpState *esPtr = NULL;
 
     for (i=1; i<objc; i++) {
 	char *name;
@@ -3198,6 +3210,23 @@ cmdX(
 	return TCL_OK;
 }
 #endif /*DEBUG_PERM_ECASES*/
+
+int expListGetElements(Tcl_Interp *interp, Tcl_Obj *objPtr,
+			   int *objcPtr, Tcl_Obj ***objvPtr)
+{
+    Tcl_Size objc;
+    Tcl_Obj **objv;
+    if (Tcl_ListObjGetElements(interp, objPtr, &objc, &objv) != TCL_OK) {
+	return TCL_ERROR;
+    }
+    if (objc > INT_MAX) {
+	exp_error(interp,"too many elements in list");
+	return TCL_ERROR;	
+    }
+    *objcPtr = (int)objc;
+    *objvPtr = objv;
+    return TCL_OK;
+}
 
 void
 expExpectVarsInit(void)

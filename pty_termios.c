@@ -9,6 +9,9 @@ would appreciate credit if you use this file or parts of it.
 
 #include <stdio.h>
 #include <signal.h>
+#include <pty.h>
+
+extern char * expErrnoMsg    (int);
 
 #if defined(SIGCLD) && !defined(SIGCHLD)
 #define SIGCHLD SIGCLD
@@ -222,7 +225,7 @@ char *name;		/* name of pty */
 }
 
 exec_stty(s)
-char *s;
+const char *s;
 {
 	char *args[50];
 	char *cp;
@@ -372,11 +375,11 @@ exp_init_pty()
 int
 exp_getptymaster()
 {
-	char *hex, *bank;
-	struct stat stat_buf;
+#if defined(HAVE_PTYM) || defined(HAVE_SCO_CLIST_PTYS)
+	int num;
+#endif
 	int master = -1;
 	int slave = -1;
-	int num;
 
 	exp_pty_error = 0;
 
@@ -429,6 +432,7 @@ exp_getptymaster()
 	master = open("/dev/ptc", O_RDWR);
 	if (master >= 0) {
 		int ptynum;
+		struct stat stat_buf;
 
 		if (fstat(master, &stat_buf) < 0) {
 			close(master);
@@ -482,6 +486,7 @@ exp_getptymaster()
 #endif /* HAVE_OPENPTY */
 
 #if defined(TEST_PTY)
+	char *hex, *bank;
 	/*
 	 * all pty allocation mechanisms after this require testing
 	 */
@@ -489,6 +494,7 @@ exp_getptymaster()
 
 #if !defined(HAVE_CONVEX_GETPTY) && !defined(HAVE_PTYM) && !defined(HAVE_SCO_CLIST_PTYS)
 	for (bank = banks;*bank;bank++) {
+		struct stat stat_buf;
 		*tty_bank = *bank;
 		*tty_num = '0';
 		if (stat(master_name, &stat_buf) < 0) break;
@@ -505,6 +511,7 @@ exp_getptymaster()
 #ifdef HAVE_SCO_CLIST_PTYS
         for (num = 0; ; num++) {
             char num_str [16];
+	    struct stat stat_buf;
 
             sprintf (num_str, "%d", num);
             sprintf (master_name, "%s%s", "/dev/ptyp", num_str);
@@ -542,7 +549,7 @@ exp_getptymaster()
 	/*
 	 * pty[a-ce-z][0-9a-f]
 	 */
-
+	struct stat stat_buf;
 	for (bank = banks;*bank;bank++) {
 		*tty_bank = *bank;
 		sprintf(tty_num,"0");
@@ -635,8 +642,7 @@ exp_getptyslave(
     int ttyinit,
     const char *stty_args)
 {
-	int slave, slave2;
-	char buf[10240];
+	int slave;
 
 	if (0 > (slave = open(slave_name, O_RDWR))) {
 		static char buf[500];
@@ -646,7 +652,8 @@ exp_getptyslave(
 	}
 
 #if defined(HAVE_PTMX_BSD)
-	if (ioctl (slave, I_LOOK, buf) != 0)
+	char buf2[10240];
+	if (ioctl (slave, I_LOOK, buf2) != 0)
 		if (ioctl (slave, I_PUSH, "ldterm")) {
 			expDiagLogPtrStrStr("ioctl(%d,I_PUSH,\"ldterm\") = %s\n",slave,expErrnoMsg(errno));
 	}
@@ -679,6 +686,7 @@ exp_getptyslave(
 #ifdef HAVE_PTYTRAP
 	/* do another open, to tell master that slave is done fiddling */
 	/* with pty and master does not have to wait to do further acks */
+	int slave2;
 	if (0 > (slave2 = open(slave_name, O_RDWR))) return(-1);
 	close(slave2);
 #endif /* HAVE_PTYTRAP */

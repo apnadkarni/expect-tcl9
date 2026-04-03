@@ -24,6 +24,19 @@ would appreciate credit if this program or parts of it are used.
 #define NO_STDLIB_H
 #endif
 
+#ifndef EXP_UNREACHABLE
+#if defined(__STDC__) && __STDC__ >= 202311L
+#include <stddef.h>
+#define EXP_UNREACHABLE()	unreachable()
+#elif defined(__GNUC__) && ((__GNUC__ == 4 && __GNUC_MINOR__ >= 5) || __GNUC__ >= 5 || defined(__clang__))
+#define EXP_UNREACHABLE()	__builtin_unreachable()
+#elif defined(_MSC_VER)
+#define EXP_UNREACHABLE()	__assume(0)
+#else
+#define EXP_UNREACHABLE()	((void) 0)
+#endif
+#endif /* EXP_UNREACHABLE */
+
 
 #include "tclInt.h"
 /*#include <varargs.h>		tclInt.h drags in varargs.h.  Since Pyramid */
@@ -677,7 +690,10 @@ debugger_trap(clientData,interp,level,command,commandInfo,objc,objv)
 		/* same comment as in "case next" */
 		if (goalFramePtr != iPtr->varFramePtr) goto finish;
 		goto start_interact;
-    /* DANGER: unhandled cases! none, up, down, where */
+    /* DANGER: unhandled cases! none, up, down, where - TODO? */
+	default:
+		EXP_UNREACHABLE();
+		break;   
 	}
 
 start_interact:
@@ -735,6 +751,9 @@ end_interact:
 		goto finish;
 	case where:
 	PrintStack(interp,iPtr->varFramePtr,viewFramePtr,objc,objv,level_text);
+		break;
+	default:
+		EXP_UNREACHABLE();
 		break;
 	}
 

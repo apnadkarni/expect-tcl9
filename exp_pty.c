@@ -138,7 +138,9 @@ int timeout;
 }
 
 static RETSIGTYPE (*oldAlarmHandler)();
+#ifndef O_NOCTTY
 static RETSIGTYPE (*oldHupHandler)();
+#endif
 static time_t current_time;	/* time when testing began */
 
 /* if TRUE, begin testing, else end testing */
@@ -305,11 +307,11 @@ exp_pty_lock(
  * ones that call expDiagLog from the two different environments.
  */
 
-static void		(*expDiagLogPtrVal) (char *);
+static void		(*expDiagLogPtrVal) (const char *);
 
 void
 expDiagLogPtrSet(fn)
-     void (*fn) (char *);
+     void (*fn) (const char *);
 {
   expDiagLogPtrVal = fn;
 }
@@ -354,9 +356,9 @@ expDiagLogPtrStrStr(fmt,str1,str2)
   (*expDiagLogPtrVal)(buf);
 }
 
-static char *		(*expErrnoMsgVal) (int);
+static const char *		(*expErrnoMsgVal) (int);
 
-char *
+const char *
 expErrnoMsg(errorNo)
 int errorNo;
 {
@@ -365,7 +367,7 @@ int errorNo;
 
 void
 expErrnoMsgSet(fn)
-     char * (*fn) (int);
+     const char * (*fn) (int);
 {
   expErrnoMsgVal = fn;
 }

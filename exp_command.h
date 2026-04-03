@@ -27,7 +27,7 @@ would appreciate credit if this program or parts of it are used.
 
 #define EXP_CHANNELNAMELEN (16 + TCL_INTEGER_SPACE)
 
-EXTERN char *		exp_get_var (Tcl_Interp *,char *);
+EXTERN const char *exp_get_var (Tcl_Interp *,const char *);
 
 EXTERN int exp_default_match_max;
 EXTERN int exp_default_parity;
@@ -210,15 +210,15 @@ extern Tcl_ChannelType expChannelType;
 #define EXP_INDIRECT	2
 
 EXTERN void		expAdjust (ExpState *);
-EXTERN int		expWriteChars (ExpState *,char *,int);
-EXTERN int		expWriteCharsUni (ExpState *,Tcl_UniChar *,int);
+EXTERN int		expWriteChars (ExpState *,const char *,int);
+EXTERN int		expWriteCharsUni (ExpState *,const Tcl_UniChar *,int);
 EXTERN void		exp_buffer_shuffle (Tcl_Interp *,ExpState *,int,char *,char *);
 EXTERN int		exp_close (Tcl_Interp *,ExpState *);
 EXTERN void		exp_close_all (Tcl_Interp *);
 EXTERN void		exp_ecmd_remove_fd_direct_and_indirect 
 				(Tcl_Interp *,int);
 EXTERN void		exp_trap_on (int);
-EXTERN int		exp_trap_off (char *);
+EXTERN int		exp_trap_off (const char *);
 
 EXTERN void		exp_strftime(char *format, const struct tm *timeptr,Tcl_DString *dstring);
 
@@ -325,7 +325,7 @@ EXTERN void		exp_init_tty_cmds();
 
 EXTERN ExpState *	expStateCheck (Tcl_Interp *,ExpState *,int,int,char *);
 EXTERN ExpState *       expStateCurrent (Tcl_Interp *,int,int,int);
-EXTERN ExpState *       expStateFromChannelName (Tcl_Interp *,char *,int,int,int,char *);
+EXTERN ExpState *       expStateFromChannelName (Tcl_Interp *,const char *,int,int,int,char *);
 EXTERN void		expStateFree (ExpState *);
 
 EXTERN ExpState *	expCreateChannel (Tcl_Interp *,int,int,int);

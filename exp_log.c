@@ -110,7 +110,7 @@ expWriteBytesAndLogIfTtyU(esPtr,buf,lenChars)
 
 void
 expLogDiagU(buf)
-char *buf;
+const char *buf;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -176,7 +176,7 @@ expStdoutLog (int arg1,...)
 
     if ((!tsdPtr->logUser) && (!force_stdout) && (!tsdPtr->logAll)) return;
 
-    (void) vsprintf(bigbuf,fmt,args);
+    (void) vsnprintf(bigbuf,sizeof(bigbuf),fmt,args);
     expDiagWriteBytes(bigbuf,-1);
     if (tsdPtr->logAll || (LOGUSER && tsdPtr->logChannel)) Tcl_WriteChars(tsdPtr->logChannel,bigbuf,-1);
     if (LOGUSER) fprintf(stdout,"%s",bigbuf);
@@ -188,7 +188,7 @@ expStdoutLog (int arg1,...)
 /* use this function for logging the parent/child conversation */
 void
 expStdoutLogU(buf,force_stdout)
-char *buf;
+const char *buf;
 int force_stdout;	/* override value of logUser */
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -222,7 +222,7 @@ expErrorLog (char * arg1,...)
     va_list args;
 
     fmt = (va_start(args, arg1), arg1);
-    (void) vsprintf(bigbuf,fmt,args);
+    (void) vsnprintf(bigbuf,sizeof(bigbuf),fmt,args);
 
     expDiagWriteChars(bigbuf,-1);
     fprintf(stderr,"%s",bigbuf);
@@ -237,7 +237,7 @@ expErrorLog (char * arg1,...)
 /*ARGSUSED*/
 void
 expErrorLogU(buf)
-char *buf;
+const char *buf;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -264,7 +264,7 @@ expDiagLog (char * arg1,...)
 
     fmt = (va_start(args, arg1), arg1);
 
-    (void) vsprintf(bigbuf,fmt,args);
+    (void) vsnprintf(bigbuf,sizeof(bigbuf),fmt,args);
 
     expDiagWriteBytes(bigbuf,-1);
     if (tsdPtr->diagToStderr) {
@@ -280,7 +280,7 @@ expDiagLog (char * arg1,...)
    this also takes care of arbitrary large strings */
 void
 expDiagLogU(str)
-char *str;
+const char *str;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -301,13 +301,12 @@ char *str;
 void
 expPrintf (char * arg1,...)
 {
-  char *fmt;
   va_list args;
   char bigbuf[2000];
   int len, rc;
 
-  fmt = (va_start(args, arg1), arg1);
-  len = vsprintf(bigbuf,arg1,args);
+  va_start(args, arg1);
+  len = vsnprintf(bigbuf,sizeof(bigbuf),arg1,args);
  retry:
   rc = write(2,bigbuf,len);
   if ((rc == -1) && (errno == EAGAIN)) goto retry;
@@ -398,7 +397,7 @@ expDiagWriteObj(obj)
 /* write 8-bit bytes */
 void
 expDiagWriteBytes(str,len)
-char *str;
+const char *str;
 int len;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -411,7 +410,7 @@ int len;
 /* write UTF chars */
 void
 expDiagWriteChars(str,len)
-char *str;
+const char *str;
 int len;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -499,7 +498,7 @@ expLogChannelOpen(interp,filename,append)
 	Tcl_DStringAppend(&tsdPtr->logFilename,filename,-1);
     }
 
-    tsdPtr->logChannel = Tcl_OpenFileChannel(interp,newfilename,mode,0777);
+    tsdPtr->logChannel = Tcl_OpenFileChannel(interp,newfilename,mode,0666);
     if (!tsdPtr->logChannel) {
 	Tcl_DStringFree(&tsdPtr->logFilename);
 	return TCL_ERROR;
@@ -723,7 +722,7 @@ expPrintifyObj(obj)
 
 char *
 expPrintify(s) /* INTL */
-char *s;
+const char *s;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 

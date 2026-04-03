@@ -1496,11 +1496,11 @@ TclGetRegError()
 static
 void
 expDiagLogU(str)
-     char *str;
+     const char *str;
 {
   if (exp_is_debugging) {
-    fprintf(stderr,str);
-    if (exp_logfile) fprintf(exp_logfile,str);
+    fprintf(stderr,"%s",str);
+    if (exp_logfile) fprintf(exp_logfile,"%s",str);
   }
 }
 
@@ -1830,6 +1830,7 @@ int fd;
 
 }
 
+#ifndef POSIX
 static
 void
 exp_setpgrp()
@@ -1846,6 +1847,7 @@ exp_setpgrp()
     (void) setpgrp(0,0);
 #endif
 }
+#endif /* POSIX */
 
 /* returns fd of master side of pty */
 int
@@ -1856,7 +1858,6 @@ char *argv[];	/* some compiler complains about **argv? */
 	int cc;
 	int errorfd;	/* place to stash fileno(stderr) in child */
 			/* while we're setting up new stderr */
-	int ttyfd;
 	int sync_fds[2];
 	int sync2_fds[2];
 	int status_pipe[2];
@@ -2051,7 +2052,7 @@ when trapping, see below in child half of fork */
 	exp_setpgrp();
 
 #ifdef TIOCNOTTY
-	ttyfd = open("/dev/tty", O_RDWR);
+	int ttyfd = open("/dev/tty", O_RDWR);
 	if (ttyfd >= 0) {
 		(void) ioctl(ttyfd, TIOCNOTTY, (char *)0);
 		(void) close(ttyfd);
@@ -2876,8 +2877,6 @@ char *program;
 int
 exp_disconnect()
 {
-	int ttyfd;
-
 #ifndef EALREADY
 #define EALREADY 37
 #endif
@@ -2904,7 +2903,7 @@ exp_disconnect()
 	exp_setpgrp();
 /* Pyramid lacks this defn */
 #ifdef TIOCNOTTY
-	ttyfd = open("/dev/tty", O_RDWR);
+	int ttyfd = open("/dev/tty", O_RDWR);
 	if (ttyfd >= 0) {
 		/* zap controlling terminal if we had one */
 		(void) ioctl(ttyfd, TIOCNOTTY, (char *)0);

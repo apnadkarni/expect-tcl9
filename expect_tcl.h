@@ -26,7 +26,7 @@ would appreciate credit if this program or parts of it are used.
 EXTERN int exp_cmdlinecmds;
 EXTERN int exp_interactive;
 EXTERN FILE *exp_cmdfile;
-EXTERN char *exp_cmdfilename;
+EXTERN const char *exp_cmdfilename;
 EXTERN int exp_getpid;	/* pid of Expect itself */
 EXTERN int exp_buffer_command_input;
 
@@ -41,10 +41,10 @@ EXTERN int	Expect_Init (Tcl_Interp *);	/* for Tcl_AppInit apps */
 EXTERN void	exp_parse_argv (Tcl_Interp *,int argc,char **argv);
 EXTERN int	exp_interpreter (Tcl_Interp *,Tcl_Obj *);
 EXTERN int	exp_interpret_cmdfile (Tcl_Interp *,FILE *);
-EXTERN int	exp_interpret_cmdfilename (Tcl_Interp *,char *);
+EXTERN int	exp_interpret_cmdfilename (Tcl_Interp *,const char *);
 EXTERN void	exp_interpret_rcfiles (Tcl_Interp *,int my_rc,int sys_rc);
 
-EXTERN char *	exp_cook (char *s,int *len);
+EXTERN const char *exp_cook (const char *s,Tcl_Size *len);
 
 EXTERN void	expCloseOnExec (int);
 

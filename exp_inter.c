@@ -696,8 +696,8 @@ static char *
 inter_updateproc(
     ClientData clientData,
     Tcl_Interp *interp,	/* Interpreter containing variable. */
-    char *name1,	/* Name of variable. */
-    char *name2,	/* Second part of variable name. */
+    const char *name1,	/* Name of variable. */
+    const char *name2,	/* Second part of variable name. */
     int flags)		/* Information about what happened. */
 {
 	exp_configure_count++;
@@ -706,15 +706,12 @@ inter_updateproc(
 			
 #define finish(x)	{ status = x; goto done; }
 
-static char return_cmd[] = "return";
-static char interpreter_cmd[] = "interpreter";
-
 /*ARGSUSED*/
 int
 Exp_InteractObjCmd(
     ClientData clientData,
     Tcl_Interp *interp,
-    Tcl_Size objc,
+    int objc,
     Tcl_Obj *const initial_objv[])		/* Argument objects. */
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -793,8 +790,9 @@ Exp_InteractObjCmd(
 	if (!new_cmd) return TCL_ERROR;
 
 	/* Replace old arguments with result of reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, &objv);
-
+	if (expListGetElements(interp, new_cmd, &objc, &objv) != TCL_OK) {
+	    goto error;
+	} 
     } else if ((objc == 3) && streq(Tcl_GetString(objv[1]),"-brace")) {
 	/* expect -brace {...} ... fake command line for reparsing */
 
@@ -804,8 +802,11 @@ Exp_InteractObjCmd(
 
 	new_cmd = exp_eval_with_one_arg(clientData,interp,new_objv);
 	if (!new_cmd) return TCL_ERROR;
+
 	/* Replace old arguments with result of reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, &objv);
+	if (expListGetElements(interp, new_cmd, &objc, &objv) != TCL_OK) {
+	    goto error;
+	} 
     }
 
     objv_copy = objv;

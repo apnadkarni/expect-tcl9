@@ -82,31 +82,33 @@ int exp_window_size_set(fd)
 int fd;
 {
 #ifdef TIOCSWINSZ
-	ioctl(fd,TIOCSWINSZ,&winsize);
+	return ioctl(fd,TIOCSWINSZ,&winsize);
 #endif
 #if defined(TIOCSSIZE) && !defined(TIOCSWINSZ)
-	ioctl(fd,TIOCSSIZE,&winsize);
+	return ioctl(fd,TIOCSSIZE,&winsize);
 #endif
 }
 
 int exp_window_size_get(fd)
 int fd;
 {
+	int ret = 0;
 #ifdef TIOCGWINSZ
-	ioctl(fd,TIOCGWINSZ,&winsize);
+	ret = ioctl(fd,TIOCGWINSZ,&winsize);
 #endif
 #if defined(TIOCGSIZE) && !defined(TIOCGWINSZ)
-	ioctl(fd,TIOCGSIZE,&winsize);
+	ret =ioctl(fd,TIOCGSIZE,&winsize);
 #endif
 #if !defined(EXP_WIN)
 	winsize.rows = 0;
 	winsize.columns = 0;
 #endif
+    return ret;
 }
 
 void
 exp_win_rows_set(rows)
-char *rows;
+const char *rows;
 {
 	winsize.rows = atoi(rows);
 	exp_window_size_set(exp_dev_tty);
@@ -123,7 +125,7 @@ exp_win_rows_get()
 
 void
 exp_win_columns_set(columns)
-char *columns;
+const char *columns;
 {
 	winsize.columns = atoi(columns);
 	exp_window_size_set(exp_dev_tty);
@@ -146,10 +148,10 @@ int exp_win2_size_set(fd)
 int fd;
 {
 #ifdef TIOCSWINSZ
-			ioctl(fd,TIOCSWINSZ,&win2size);
+	return ioctl(fd,TIOCSWINSZ,&win2size);
 #endif
 #if defined(TIOCSSIZE) && !defined(TIOCSWINSZ)
-			ioctl(fd,TIOCSSIZE,&win2size);
+	return ioctl(fd,TIOCSSIZE,&win2size);
 #endif
 }
 
@@ -157,17 +159,17 @@ int exp_win2_size_get(fd)
 int fd;
 {
 #ifdef TIOCGWINSZ
-	ioctl(fd,TIOCGWINSZ,&win2size);
+	return ioctl(fd,TIOCGWINSZ,&win2size);
 #endif
 #if defined(TIOCGSIZE) && !defined(TIOCGWINSZ)
-	ioctl(fd,TIOCGSIZE,&win2size);
+	return ioctl(fd,TIOCGSIZE,&win2size);
 #endif
 }
 
 void
 exp_win2_rows_set(fd,rows)
 int fd;
-char *rows;
+const char *rows;
 {
 	exp_win2_size_get(fd);
 	win2size.rows = atoi(rows);
@@ -191,7 +193,7 @@ int fd;
 void
 exp_win2_columns_set(fd,columns)
 int fd;
-char *columns;
+const char *columns;
 {
 	exp_win2_size_get(fd);
 	win2size.columns = atoi(columns);

@@ -100,7 +100,14 @@ exp_retoglob (
 #define CHOPC(c) {while (*str != (c) && strlen) CHOP(1) ;}
 #define EMIT(c)  {lastsz = 1; *nexto++ = (c);}
 #define EMITX(c) {lastsz++;   *nexto++ = (c);}
-#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == Tcl_UtfNcmp (str,(lit),sizeof(lit)/sizeof (Tcl_UniChar))))
+/* 
+ * Tcl 9 porting note: The MATCH in Tcl 8 expect used to call
+ * Tcl_UniCharNcmp to do the comparison as Tcl_UniChar was UTF-16 encoded.
+ * In Tcl 9, Tcl_UniChar is simply the 32-bit code point. Moreover, since we
+ * only care about equality and not greater/less, we can just use memcmp.
+ * (Actually the original code could have as well)
+ */
+#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == memcmp (str,(lit),sizeof(lit)/sizeof (Tcl_UniChar))))
 #define MATCHC(c) (strlen && (*str == (c)))
 #define PUSHPAREN {*nextp++ = nexto;}
 #define UNEMIT {nexto -= lastsz; lastsz = -1;}

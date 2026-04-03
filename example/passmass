@@ -107,6 +107,10 @@ for {set i 0} {$i<$argc} {incr i} {
 	set login "ssh"
 	continue
     } "-telnet" {
+	if {[file executable /usr/bin/telnet] == 0} {
+		send_user "It seems that telnet is not installed. Please install telnet in order to use the script with this option.\n"
+		exit 1
+	}
 	set login "telnet"
 	continue
     } "-program" {
@@ -174,7 +178,7 @@ for {set i 0} {$i<$argc} {incr i} {
     }
 
     if ($su) {
-	send "su -\r"
+	send "/bin/su -\r"
 	expect -nocase "password:"
 	send "$password(old)\r"
 	expect "# "
