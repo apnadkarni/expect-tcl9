@@ -52,7 +52,7 @@ char *exp_argv0 = "this program";	/* default program name */
 void (*exp_app_exit)() = 0;
 void (*exp_event_exit)() = 0;
 FILE *exp_cmdfile = 0;
-char *exp_cmdfilename = 0;
+const char *exp_cmdfilename = 0;
 int exp_cmdlinecmds = FALSE;
 int exp_interactive =  FALSE;
 int exp_buffer_command_input = FALSE;/* read in entire cmdfile at once */
@@ -866,7 +866,7 @@ char **argv;
 		expDiagLog("set argv0 \"%s\"\r\n",exp_argv0);
 	}
 
-	args = Tcl_Merge(argc-optind,argv+optind);
+	args = Tcl_Merge(argc-optind,(const char * const *)(argv+optind));
 	expDiagLogU("set argv \"");
 	expDiagLogU(args);
 	expDiagLogU("\"\r\n");
@@ -948,7 +948,7 @@ int sys_rc;
 int
 exp_interpret_cmdfilename(interp,filename)
 Tcl_Interp *interp;
-char *filename;
+const char *filename;
 {
 	int rc;
 

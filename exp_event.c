@@ -23,6 +23,7 @@ NIST would appreciate credit if this program or parts of it are used.
 #include "tcl.h"
 #include "exp_prog.h"
 #include "exp_command.h"	/* for ExpState defs */
+#include "exp_log.h"
 #include "exp_event.h"
 
 typedef struct ThreadSpecificData {
@@ -120,7 +121,9 @@ exp_unblock_background_channelhandler(esPtr)
 	case disarm_req_while_blocked:
 	    exp_disarm_background_channelhandler_force(esPtr);
 	    break;
-    }
+	default:
+	    expDiagLog("Unexpected value %d of bg-handler in %s",
+			   esPtr->bg_status, __func__);}
 }
 
 /* this can only be called at the beginning of the bg handler in which */

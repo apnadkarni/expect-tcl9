@@ -283,7 +283,7 @@ exp_tty_break(
 /* NB: if terminal is not in raw mode, nothing is done. */
 char *
 exp_cook(
-    char *s,
+    const char *s,
     Tcl_Size *len)	/* current and new length of s */
 {
 	static int destlen = 0;

@@ -29,7 +29,7 @@ void	expDiagLogPtrX      (char *,int);
 void	expDiagLogPtrStr    (char *,char *);
 void	expDiagLogPtrStrStr (char *,char *,char *);
 void	expErrnoMsgSet      (const char * (*) (int));
-char *	expErrnoMsg         (int);
+const char *expErrnoMsg     (int);
 
 int	expListGetElements  (Tcl_Interp *interp, Tcl_Obj *objPtr,
 			        int *objcPtr, Tcl_Obj ***objvPtr);

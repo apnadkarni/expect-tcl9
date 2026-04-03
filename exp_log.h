@@ -17,7 +17,7 @@ EXTERN void		expDiagWriteBytes (const char *,int);
 EXTERN void		expDiagWriteChars (const char *,int);
 EXTERN void		expDiagWriteObj (Tcl_Obj *);
 EXTERN void		expDiagLog (char *,...);
-EXTERN void		expDiagLogU (char *);
+EXTERN void		expDiagLogU (const char *);
 
 EXTERN char *		expPrintify (char *);
 EXTERN char *		expPrintifyUni (Tcl_UniChar *,int);
