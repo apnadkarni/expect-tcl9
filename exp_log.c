@@ -188,7 +188,7 @@ expStdoutLog (int arg1,...)
 /* use this function for logging the parent/child conversation */
 void
 expStdoutLogU(buf,force_stdout)
-char *buf;
+const char *buf;
 int force_stdout;	/* override value of logUser */
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -237,7 +237,7 @@ expErrorLog (char * arg1,...)
 /*ARGSUSED*/
 void
 expErrorLogU(buf)
-char *buf;
+const char *buf;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -398,7 +398,7 @@ expDiagWriteObj(obj)
 /* write 8-bit bytes */
 void
 expDiagWriteBytes(str,len)
-char *str;
+const char *str;
 int len;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -411,7 +411,7 @@ int len;
 /* write UTF chars */
 void
 expDiagWriteChars(str,len)
-char *str;
+const char *str;
 int len;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);

@@ -284,12 +284,12 @@ exp_tty_break(
 char *
 exp_cook(
     char *s,
-    int *len)	/* current and new length of s */
+    Tcl_Size *len)	/* current and new length of s */
 {
 	static int destlen = 0;
 	static char *dest = 0;
 	char *d;		/* ptr into dest */
-	unsigned int need;
+	size_t need;
 
 	if (s == 0) return("<null>");
 

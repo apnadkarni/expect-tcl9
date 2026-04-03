@@ -793,8 +793,9 @@ Exp_InteractObjCmd(
 	if (!new_cmd) return TCL_ERROR;
 
 	/* Replace old arguments with result of reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, &objv);
-
+	if (expListGetElements(interp, new_cmd, &objc, &objv) != TCL_OK) {
+	    goto error;
+	} 
     } else if ((objc == 3) && streq(Tcl_GetString(objv[1]),"-brace")) {
 	/* expect -brace {...} ... fake command line for reparsing */
 
@@ -804,8 +805,11 @@ Exp_InteractObjCmd(
 
 	new_cmd = exp_eval_with_one_arg(clientData,interp,new_objv);
 	if (!new_cmd) return TCL_ERROR;
+
 	/* Replace old arguments with result of reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, &objv);
+	if (expListGetElements(interp, new_cmd, &objc, &objv) != TCL_OK) {
+	    goto error;
+	} 
     }
 
     objv_copy = objv;

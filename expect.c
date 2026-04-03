@@ -1415,7 +1415,10 @@ Exp_ExpectGlobalObjCmd(
 
     if (new_cmd) {
 	/* Replace old arguments with result of the reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, (Tcl_Obj***) &objv);
+	if (expListGetElements (interp, new_cmd, &objc, (Tcl_Obj***) &objv) != TCL_OK) {
+	    Tcl_DecrRefCount(new_cmd);
+	    return TCL_ERROR;
+	}
     }
 
     if (objc > 1 && (Tcl_GetString(objv[1])[0] == '-')) {
@@ -2586,7 +2589,10 @@ Exp_ExpectObjCmd(
 
     if (new_cmd) {
 	/* Replace old arguments with result of the reparse */
-	Tcl_ListObjGetElements (interp, new_cmd, &objc, (Tcl_Obj***) &objv);
+	if (expListGetElements(interp, new_cmd, &objc, (Tcl_Obj ***)&objv)) {
+	    Tcl_DecrRefCount (new_cmd);
+	    return TCL_ERROR;
+	}
     }
 
     Tcl_GetTime (&temp_time);
@@ -2905,7 +2911,7 @@ process_di (
     int def = FALSE;
     char* chan = NULL;
     int i;
-    ExpState *esPtr;
+    ExpState *esPtr = NULL;
 
     for (i=1; i<objc; i++) {
 	char *name;
@@ -3204,6 +3210,23 @@ cmdX(
 	return TCL_OK;
 }
 #endif /*DEBUG_PERM_ECASES*/
+
+int expListGetElements(Tcl_Interp *interp, Tcl_Obj *objPtr,
+			   int *objcPtr, Tcl_Obj ***objvPtr)
+{
+    Tcl_Size objc;
+    Tcl_Obj **objv;
+    if (Tcl_ListObjGetElements(interp, objPtr, &objc, &objv) != TCL_OK) {
+	return TCL_ERROR;
+    }
+    if (objc > INT_MAX) {
+	exp_error(interp,"too many elements in list");
+	return TCL_ERROR;	
+    }
+    *objcPtr = (int)objc;
+    *objvPtr = objv;
+    return TCL_OK;
+}
 
 void
 expExpectVarsInit(void)
