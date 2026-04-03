@@ -258,7 +258,7 @@ int check_for_nostack;
 	/* no \n at end, since ccmd will already have one. */
 	/* Actually, this is not true if command is last in */
 	/* file and has no newline after it, oh well */
-	expErrorLogU(exp_cook(msg,(int *)0));
+	expErrorLogU(exp_cook(msg,NULL));
 	expErrorLogU("\r\n");
 }
 
@@ -399,7 +399,7 @@ Tcl_Obj *eofObj;
 	    case TCL_OK:
 	        str = Tcl_GetStringResult(interp);
 		if (*str != 0) {
-		    expStdoutLogU(exp_cook(str,(int *)0),1);
+		    expStdoutLogU(exp_cook(str,NULL),1);
 		    expStdoutLogU("\r\n",1);
 		}
 		continue;
@@ -718,7 +718,7 @@ char **argv;
 			exp_cmdlinecmds = TRUE;
 			rc = Tcl_Eval(interp,optarg);
 			if (rc != TCL_OK) {
-			    expErrorLogU(exp_cook(Tcl_GetVar(interp,"errorInfo",TCL_GLOBAL_ONLY),(int *)0));
+			    expErrorLogU(exp_cook(Tcl_GetVar(interp,"errorInfo",TCL_GLOBAL_ONLY),NULL));
 			    expErrorLogU("\r\n");
 			}
 			break;

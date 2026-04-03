@@ -218,7 +218,7 @@ expStateCheck(
 ExpState *
 expStateFromChannelName(
     Tcl_Interp *interp,
-    char *name,
+    const char *name,
     int open,
     int adjust,
     int any,
@@ -583,15 +583,10 @@ Exp_SpawnObjCmd(
     ExpState *esPtr = 0;
     int slave;
     int pid;
-#ifdef TIOCNOTTY
-    /* tell Saber to ignore non-use of ttyfd */
-    /*SUPPRESS 591*/
-    int ttyfd;
-#endif /* TIOCNOTTY */
     int errorfd;	/* place to stash fileno(stderr) in child */
 			/* while we're setting up new stderr */
     int master, k;
-    int write_master;	/* write fd of Tcl-opened files */
+    int write_master = -1;	/* write fd of Tcl-opened files */
     int ttyinit = TRUE;
     int ttycopy = TRUE;
     int echo = TRUE;
@@ -887,7 +882,7 @@ Exp_SpawnObjCmd(
 	/*
 	 * process "-open $channel"
 	 */
-	int mode, rfd, wfd;
+	int mode, rfd = -1, wfd = -1;
 	ClientData rfdc, wfdc;
 
 	if (echo) {
@@ -1149,7 +1144,7 @@ Exp_SpawnObjCmd(
 
 /* Pyramid lacks this defn */
 #ifdef TIOCNOTTY
-    ttyfd = open("/dev/tty", O_RDWR);
+    int ttyfd = open("/dev/tty", O_RDWR);
     if (ttyfd >= 0) {
 	(void) ioctl(ttyfd, TIOCNOTTY, (char *)0);
 	(void) close(ttyfd);
@@ -1501,7 +1496,7 @@ slow_write(
 
     while (rembytes > 0) {
 	int i, bytelen, charlen;
-	char *p;
+	const char *p;
 
 	p = buffer;
 	charlen = (arg->size<rembytes?arg->size:rembytes);
@@ -1840,7 +1835,7 @@ exp_i_parse_states(
     struct ExpState *esPtr;
     char *p = i->value;
     Tcl_Size argc;
-    char **argv;
+    const char **argv;
     int j;
 
     if (Tcl_SplitList(NULL, p, &argc, &argv) != TCL_OK) goto error;
@@ -1866,7 +1861,7 @@ exp_i_update(
     Tcl_Interp *interp,
     struct exp_i *i)
 {
-    char *p;	/* string representation of list of spawn ids */
+    const char *p;	/* string representation of list of spawn ids */
 
     if (i->direct == EXP_INDIRECT) {
 	p = Tcl_GetVar(interp,i->variable,TCL_GLOBAL_ONLY);
@@ -1978,7 +1973,7 @@ Exp_SendObjCmd(
 #define SEND_STYLE_BREAK	0x20
     int send_style = SEND_STYLE_PLAIN;
     int want_cooked = TRUE;
-    char *string;		/* string to send */
+    char *string = NULL;	/* string to send */
     Tcl_Size len = -1;		/* length of string to send */
     int zeros;		/* count of how many ascii zeros to send */
 
@@ -3116,12 +3111,6 @@ Exp_DisconnectObjCmd(
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
     
-#ifdef TIOCNOTTY
-    /* tell CenterLine to ignore non-use of ttyfd */
-    /*SUPPRESS 591*/
-    int ttyfd;
-#endif /* TIOCNOTTY */
-
     if (objc > 1) {
 	exp_error(interp,"usage: disconnect");
 	return(TCL_ERROR);
@@ -3203,7 +3192,7 @@ Exp_DisconnectObjCmd(
 
 /* Pyramid lacks this defn */
 #ifdef TIOCNOTTY
-    ttyfd = open("/dev/tty", O_RDWR);
+    int ttyfd = open("/dev/tty", O_RDWR);
     if (ttyfd >= 0) {
 	/* zap controlling terminal if we had one */
 	(void) ioctl(ttyfd, TIOCNOTTY, (char *)0);

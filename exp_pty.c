@@ -365,7 +365,7 @@ int errorNo;
 
 void
 expErrnoMsgSet(fn)
-     char * (*fn) (int);
+     const char * (*fn) (int);
 {
   expErrnoMsgVal = fn;
 }

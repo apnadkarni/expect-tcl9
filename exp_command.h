@@ -325,7 +325,7 @@ EXTERN void		exp_init_tty_cmds();
 
 EXTERN ExpState *	expStateCheck (Tcl_Interp *,ExpState *,int,int,char *);
 EXTERN ExpState *       expStateCurrent (Tcl_Interp *,int,int,int);
-EXTERN ExpState *       expStateFromChannelName (Tcl_Interp *,char *,int,int,int,char *);
+EXTERN ExpState *       expStateFromChannelName (Tcl_Interp *,const char *,int,int,int,char *);
 EXTERN void		expStateFree (ExpState *);
 
 EXTERN ExpState *	expCreateChannel (Tcl_Interp *,int,int,int);
