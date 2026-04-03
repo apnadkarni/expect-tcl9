@@ -55,7 +55,7 @@ static void		ExpWatchProc (ClientData instanceData,
 static int		ExpGetHandleProc (ClientData instanceData,
 		            int direction, ClientData *handlePtr);
 static int		ExpThreadActionProc (ClientData instanceData,
-		            int action);
+		            int action); /* TODO ? */
 
 /*
  * This structure describes the channel type structure for Expect-based IO:
@@ -81,7 +81,8 @@ Tcl_ChannelType expChannelType = {
     NULL, /* FlushProc. Must be NULL as per Tcl docs */
     NULL, /* HandlerProc. Only valid for stacked channels */
     NULL, /* WideSeekProc. */
-    NULL,
+    NULL, /* ThreadActionProc. */
+    NULL, /* TruncateProc. */
 };
 
 typedef struct ThreadSpecificData {
@@ -468,10 +469,10 @@ ExpGetHandleProc(instanceData, direction, handlePtr)
     ExpState *esPtr = (ExpState *) instanceData;
 
     if (direction & TCL_WRITABLE) {
-	*handlePtr = (ClientData) esPtr->fdin;
+	*handlePtr = (ClientData) (ptrdiff_t) esPtr->fdin;
     }
     if (direction & TCL_READABLE) {
-	*handlePtr = (ClientData) esPtr->fdin;
+	*handlePtr = (ClientData) (ptrdiff_t) esPtr->fdin;
     } else {
 	return TCL_ERROR;
     }

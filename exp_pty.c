@@ -138,7 +138,9 @@ int timeout;
 }
 
 static RETSIGTYPE (*oldAlarmHandler)();
+#ifndef O_NOCTTY
 static RETSIGTYPE (*oldHupHandler)();
+#endif
 static time_t current_time;	/* time when testing began */
 
 /* if TRUE, begin testing, else end testing */
@@ -354,9 +356,9 @@ expDiagLogPtrStrStr(fmt,str1,str2)
   (*expDiagLogPtrVal)(buf);
 }
 
-static char *		(*expErrnoMsgVal) (int);
+static const char *		(*expErrnoMsgVal) (int);
 
-char *
+const char *
 expErrnoMsg(errorNo)
 int errorNo;
 {

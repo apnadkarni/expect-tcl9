@@ -280,7 +280,7 @@ expDiagLog (char * arg1,...)
    this also takes care of arbitrary large strings */
 void
 expDiagLogU(str)
-char *str;
+const char *str;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
