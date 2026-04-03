@@ -2307,7 +2307,12 @@ expMatchProcess(
 
 				/* string itself */
 		sprintf(name,"%d,string",i);
-		val = Tcl_GetRange(buf, start, end);
+		/* Bug fix from https://sourceforge.net/p/expect/patches/26/ */
+		if (end >= start) {
+		    val = Tcl_GetRange(buf, start, end);
+		} else {
+		    val = Tcl_NewObj();
+		}
 		expDiagLog("%s: set %s(%s) \"",detail,EXPECT_OUT,name);
 		expDiagLogU(expPrintifyObj(val));
 		expDiagLogU("\"\r\n");
