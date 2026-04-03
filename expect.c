@@ -284,7 +284,6 @@ exp_eval_with_one_arg(
     Tcl_Token *tokenPtr;
     const char *p;
     const char *next;
-    int rc;
     Tcl_Size bytesLeft, numWords;
     Tcl_Parse parse;
 
@@ -307,7 +306,8 @@ exp_eval_with_one_arg(
     do {
 	if (Tcl_ParseCommand(interp, p, bytesLeft, 0, &parse)
 	        != TCL_OK) {
-	    rc = TCL_ERROR;
+	    Tcl_DecrRefCount (res);
+	    res = NULL;
 	    goto done;
 	}
 	numWords = parse.numWords;
@@ -1766,13 +1766,12 @@ expIRead( /* INTL */
     int save_flags)
 {
     int cc = EXP_TIMEOUT;
-    int size;
 
     /* We drop one third when are at least 2/3 full */
     /* condition is (size >= max*2/3) <=> (size*3 >= max*2) */
     if (expSizeGet(esPtr)*3 >= esPtr->input.max*2)
 	exp_buffer_shuffle(interp,esPtr,save_flags,EXPECT_OUT,"expect");
-    size = expSizeGet(esPtr);
+    (void) expSizeGet(esPtr);
 
 #ifdef SIMPLE_EVENT
  restart:
@@ -2046,12 +2045,12 @@ which looks in the global space if they are not in the local space.
 This allows the user to localize them if desired, and also to
 avoid having to put "global" in procedure definitions.
 */
-char *
+const char *
 exp_get_var(
     Tcl_Interp *interp,
-    char *var)
+    const char *var)
 {
-    char *val;
+    const char *val;
 
     if (NULL != (val = Tcl_GetVar(interp,var,0 /* local */)))
 	return(val);
@@ -2598,8 +2597,9 @@ Exp_ExpectObjCmd(
     Tcl_GetTime (&temp_time);
     start_time_total = temp_time.sec;
     start_time = start_time_total;
+    (void)start_time; /* Avoid compiler warn of never used. TODO */
     reset_timer = TRUE;
-    
+
     if (&StdinoutPlaceholder == (ExpState *)clientData) {
 	clientData = (ClientData) expStdinoutGet();
     } else if (&DevttyPlaceholder == (ExpState *)clientData) {

@@ -225,7 +225,7 @@ char *name;		/* name of pty */
 }
 
 exec_stty(s)
-char *s;
+const char *s;
 {
 	char *args[50];
 	char *cp;

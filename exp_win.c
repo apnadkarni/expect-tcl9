@@ -169,7 +169,7 @@ int fd;
 void
 exp_win2_rows_set(fd,rows)
 int fd;
-char *rows;
+const char *rows;
 {
 	exp_win2_size_get(fd);
 	win2size.rows = atoi(rows);
@@ -193,7 +193,7 @@ int fd;
 void
 exp_win2_columns_set(fd,columns)
 int fd;
-char *columns;
+const char *columns;
 {
 	exp_win2_size_get(fd);
 	win2size.columns = atoi(columns);

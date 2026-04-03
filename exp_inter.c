@@ -706,9 +706,6 @@ inter_updateproc(
 			
 #define finish(x)	{ status = x; goto done; }
 
-static char return_cmd[] = "return";
-static char interpreter_cmd[] = "interpreter";
-
 /*ARGSUSED*/
 int
 Exp_InteractObjCmd(

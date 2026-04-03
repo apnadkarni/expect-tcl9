@@ -54,8 +54,10 @@ static void		ExpWatchProc (ClientData instanceData,
 		            int mask);
 static int		ExpGetHandleProc (ClientData instanceData,
 		            int direction, ClientData *handlePtr);
+#ifdef TODO
 static int		ExpThreadActionProc (ClientData instanceData,
-		            int action); /* TODO ? */
+		            int action);
+#endif
 
 /*
  * This structure describes the channel type structure for Expect-based IO:
@@ -532,7 +534,7 @@ expSizeZero(esPtr)
 int
 expWriteChars(esPtr,buffer,lenBytes)
      ExpState *esPtr;
-     char *buffer;
+     const char *buffer;
      int lenBytes;
 {
   int rc;
@@ -555,7 +557,7 @@ expWriteChars(esPtr,buffer,lenBytes)
 int
 expWriteCharsUni(esPtr,buffer,lenChars)
      ExpState *esPtr;
-     Tcl_UniChar *buffer;
+     const Tcl_UniChar *buffer;
      int lenChars;
 {
   int rc;

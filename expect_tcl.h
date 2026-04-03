@@ -44,7 +44,7 @@ EXTERN int	exp_interpret_cmdfile (Tcl_Interp *,FILE *);
 EXTERN int	exp_interpret_cmdfilename (Tcl_Interp *,const char *);
 EXTERN void	exp_interpret_rcfiles (Tcl_Interp *,int my_rc,int sys_rc);
 
-EXTERN char *	exp_cook (const char *s,Tcl_Size *len);
+EXTERN const char *exp_cook (const char *s,Tcl_Size *len);
 
 EXTERN void	expCloseOnExec (int);
 

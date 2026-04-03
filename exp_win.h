@@ -16,7 +16,7 @@ char* exp_win_rows_get    (void);
 void  exp_win_columns_set (const char* columns);
 char* exp_win_columns_get (void);
 
-void  exp_win2_rows_set    (int fd, char* rows);
+void  exp_win2_rows_set    (int fd, const char* rows);
 char* exp_win2_rows_get    (int fd);
-void  exp_win2_columns_set (int fd, char* columns);
+void  exp_win2_columns_set (int fd, const char* columns);
 char* exp_win2_columns_get (int fd);

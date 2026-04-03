@@ -193,7 +193,7 @@ expStateCurrent(
 {
     static char *user_spawn_id = "exp0";
 
-    char *name = exp_get_var(interp,SPAWN_ID_VARNAME);
+    const char *name = exp_get_var(interp,SPAWN_ID_VARNAME);
     if (!name) name = user_spawn_id;
 
     return expStateFromChannelName(interp,name,opened,adjust,any,SPAWN_ID_VARNAME);
@@ -286,7 +286,7 @@ exp_trap_on(int master)
 }
 
 int
-exp_trap_off(char *name)
+exp_trap_off(const char *name)
 {
 #ifdef HAVE_PTYTRAP
     ExpState *esPtr;
@@ -534,6 +534,7 @@ set_pgrp(int fd)
 }
 #endif
 
+#ifndef POSIX
 static
 void
 expSetpgrp()
@@ -550,6 +551,7 @@ expSetpgrp()
     (void) setpgrp(0,0);
 #endif
 }
+#endif /* POSIX */
 
 
 /*ARGSUSED*/
@@ -1488,7 +1490,7 @@ static int
 slow_write(
     Tcl_Interp *interp,
     ExpState *esPtr,
-    char *buffer,
+    const char *buffer,
     int rembytes,
     struct slow_arg *arg)
 {
@@ -1596,10 +1598,10 @@ static int
 human_write(
     Tcl_Interp *interp,
     ExpState *esPtr,
-    char *buffer,
+    const char *buffer,
     struct human_arg *arg)
 {
-    char *sp;
+    const char *sp;
     int size;
     float t;
     float alpha;
@@ -1973,7 +1975,7 @@ Exp_SendObjCmd(
 #define SEND_STYLE_BREAK	0x20
     int send_style = SEND_STYLE_PLAIN;
     int want_cooked = TRUE;
-    char *string = NULL;	/* string to send */
+    const char *string = NULL;	/* string to send */
     Tcl_Size len = -1;		/* length of string to send */
     int zeros;		/* count of how many ascii zeros to send */
 

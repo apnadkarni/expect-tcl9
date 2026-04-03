@@ -232,7 +232,7 @@ handle_eval_error(interp,check_for_nostack)
 Tcl_Interp *interp;
 int check_for_nostack;
 {
-	char *msg;
+	const char *msg;
 
 	/* if errorInfo has something, print it */
     /* else use what's in the interp result */

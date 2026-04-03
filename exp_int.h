@@ -23,7 +23,7 @@ would appreciate credit if this program or parts of it are used.
 #include <errno.h>
 
 void	exp_console_set     (void);
-void	expDiagLogPtrSet    (void (*)(char *));
+void	expDiagLogPtrSet    (void (*)(const char *));
 void	expDiagLogPtr       (char *);
 void	expDiagLogPtrX      (char *,int);
 void	expDiagLogPtrStr    (char *,char *);

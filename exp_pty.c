@@ -307,11 +307,11 @@ exp_pty_lock(
  * ones that call expDiagLog from the two different environments.
  */
 
-static void		(*expDiagLogPtrVal) (char *);
+static void		(*expDiagLogPtrVal) (const char *);
 
 void
 expDiagLogPtrSet(fn)
-     void (*fn) (char *);
+     void (*fn) (const char *);
 {
   expDiagLogPtrVal = fn;
 }

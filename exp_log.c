@@ -110,7 +110,7 @@ expWriteBytesAndLogIfTtyU(esPtr,buf,lenChars)
 
 void
 expLogDiagU(buf)
-char *buf;
+const char *buf;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -301,12 +301,11 @@ const char *str;
 void
 expPrintf (char * arg1,...)
 {
-  char *fmt;
   va_list args;
   char bigbuf[2000];
   int len, rc;
 
-  fmt = (va_start(args, arg1), arg1);
+  va_start(args, arg1);
   len = vsnprintf(bigbuf,sizeof(bigbuf),arg1,args);
  retry:
   rc = write(2,bigbuf,len);
@@ -723,7 +722,7 @@ expPrintifyObj(obj)
 
 char *
 expPrintify(s) /* INTL */
-char *s;
+const char *s;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 

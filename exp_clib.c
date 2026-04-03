@@ -1830,6 +1830,7 @@ int fd;
 
 }
 
+#ifndef POSIX
 static
 void
 exp_setpgrp()
@@ -1846,6 +1847,7 @@ exp_setpgrp()
     (void) setpgrp(0,0);
 #endif
 }
+#endif /* POSIX */
 
 /* returns fd of master side of pty */
 int
