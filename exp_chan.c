@@ -379,61 +379,22 @@ ExpCloseProc(instanceData, interp)
 }
 /*ARGSUSED*/
 static int
-ExpClose2Proc(instanceData, interp, whatever)
+ExpClose2Proc(instanceData, interp, flags)
     ClientData instanceData;	/* Exp state. */
     Tcl_Interp *interp;		/* For error reporting - unused. */
-    int whatever; /* whatever - unused */
+    int flags;			/*  */
 {
-    ExpState *esPtr = (ExpState *) instanceData;
-    ExpState **nextPtrPtr;
-    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-
-    esPtr->registered = FALSE;
-
-#if 0
     /*
-      Really should check that we created one first.  Since we're sharing fds
-      with Tcl, perhaps a filehandler was created with a plain tcl file - we
-      wouldn't want to delete that.  Although if user really close Expect's
-      user_spawn_id, it probably doesn't matter anyway.
-    */
-
-    Tcl_DeleteFileHandler(esPtr->fdin);
-#endif /*0*/
-
-    Tcl_Free((char*)esPtr->input.buffer);
-    Tcl_DecrRefCount (esPtr->input.newchars);
-
-    /* Actually file descriptor should have been closed earlier. */
-    /* So do nothing here */
-
-    /*
-     * Conceivably, the process may not yet have been waited for.  If this
-     * becomes a requirement, we'll have to revisit this code.  But for now, if
-     * it's just Tcl exiting, the processes will exit on their own soon
-     * anyway.
+     * Ignore calls that have either TCL_CLOSE_READ or TCL_CLOSE_WRITE set.
+     * Important as otherwise Tcl will call this procedure twice, once with
+     * one of those set and then again with flags=0 for the final close.
+     * EINVAL is code required to be returned to Tcl for channels that do
+     * not support half closes.
      */
-
-    for (nextPtrPtr = &(tsdPtr->firstExpPtr); (*nextPtrPtr) != NULL;
-	 nextPtrPtr = &((*nextPtrPtr)->nextPtr)) {
-	if ((*nextPtrPtr) == esPtr) {
-	    (*nextPtrPtr) = esPtr->nextPtr;
-	    break;
-	}
+    if ((flags & (TCL_CLOSE_READ | TCL_CLOSE_WRITE)) != 0) {
+	return EINVAL;
     }
-    tsdPtr->channelCount--;
-
-    if (esPtr->bg_status == blocked ||
-	    esPtr->bg_status == disarm_req_while_blocked) {
-	esPtr->freeWhenBgHandlerUnblocked = 1;
-	/*
-	 * If we're in the middle of a bg event handler, then the event
-	 * handler will have to take care of freeing esPtr.
-	 */
-    } else {
-	expStateFree(esPtr);
-    }
-    return 0;
+    return ExpCloseProc(instanceData, interp);
 }
 
 /*
