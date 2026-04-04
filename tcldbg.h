@@ -57,7 +57,7 @@ EXTERN int Tcldbg_Init (Tcl_Interp *);
 EXTERN void Dbg_On (Tcl_Interp *interp,
 					int immediate);
 EXTERN void Dbg_Off (Tcl_Interp *interp);
-EXTERN char **Dbg_ArgcArgv (int argc,char *argv[],
+EXTERN const char * const*Dbg_ArgcArgv (int argc,const char * argv[],
 					int copy);
 EXTERN int Dbg_Active (Tcl_Interp *interp);
 EXTERN Dbg_InterStruct Dbg_Interactor (

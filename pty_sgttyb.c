@@ -88,7 +88,7 @@ ttytype(
 		 	/* following used only if request == SET_TTYTYPE */
     int ttycopy,	/* true/false, copy from /dev/tty */
     int ttyinit,	/* if true, initialize to sane state */
-    char *s)		/* stty args, used only if request == SET_TTYTYPE */
+    const char *s)	/* stty args, used only if request == SET_TTYTYPE */
 {
 	static struct	tchars tc;		/* special characters */
 	static struct	ltchars lc;		/* local special characters */

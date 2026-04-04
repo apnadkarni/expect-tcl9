@@ -22,6 +22,10 @@ would appreciate credit if this program or parts of it are used.
 #include <limits.h>
 #include <errno.h>
 
+#if (TCL_MAJOR_VERSION < 8) || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION < 6)
+#error "Expect requires Tcl 8.6 or later"
+#endif
+
 /* Check, if Tcl version supports Tcl_Size,
    which was introduced in Tcl 9.
 */

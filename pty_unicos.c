@@ -120,7 +120,7 @@ ttytype(
 		 	/* following used only if request == SET_TTYTYPE */
     int ttycopy,	/* true/false, copy from /dev/tty */
     int ttyinit,	/* if true, initialize to sane state */
-    char *s)		/* stty args, used only if request == SET_TTYTYPE */
+    const char *s)	/* stty args, used only if request == SET_TTYTYPE */
 {
 	if (request == GET_TTYTYPE) {
 		if (-1 == ioctl(fd, TCGETA, (char *)&exp_tty_original)) {
