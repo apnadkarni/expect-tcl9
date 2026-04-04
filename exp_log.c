@@ -629,7 +629,7 @@ expLogUserSet(
 /* in diagnostic mode, "expect -d" */
 static char *
 expPrintifyReal(
-    char *s)
+    const char *s)
 {
 	static int destlen = 0;
 	static char *dest = 0;

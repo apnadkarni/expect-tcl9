@@ -265,8 +265,8 @@ const char *s;
 
 static void
 pty_stty(
-    char *s,		/* args to stty */
-    char *name)		/* name of pty */
+    const char *s,		/* args to stty */
+    const char *name)		/* name of pty */
 {
 #define MAX_ARGLIST 10240
 	char buf[MAX_ARGLIST];	/* overkill is easier */
@@ -296,7 +296,7 @@ ttytype(
 			/* following are used only for request SET_TTYTYPE */
     int ttycopy,	/* true/false, copy from /dev/tty */
     int ttyinit,	/* if true, initialize to sane state */
-    char *s)		/* stty args */
+    const char *s)	/* stty args */
 {
 	if (request == GET_TTYTYPE) {
 #ifdef HAVE_TCSETATTR

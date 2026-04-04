@@ -38,7 +38,7 @@ EXTERN Tcl_Interp *exp_interp;
 
 #define Exp_Init Expect_Init
 EXTERN int	Expect_Init (Tcl_Interp *);	/* for Tcl_AppInit apps */
-EXTERN void	exp_parse_argv (Tcl_Interp *,int argc,char **argv);
+EXTERN void	exp_parse_argv (Tcl_Interp *,int argc,char * const*argv);
 EXTERN int	exp_interpreter (Tcl_Interp *,Tcl_Obj *);
 EXTERN int	exp_interpret_cmdfile (Tcl_Interp *,FILE *);
 EXTERN int	exp_interpret_cmdfilename (Tcl_Interp *,const char *);

@@ -14,6 +14,8 @@ Following caveats apply:
 longer be compatible
 - Only Linux distributions have been tested. Other platforms may not even
 compile.
+- Only the Tcl extension has been tested, not bindings to other languages
+with libexpect.
 
 
 The original README is below.

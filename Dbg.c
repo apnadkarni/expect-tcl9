@@ -97,8 +97,8 @@ static int compress = DEFAULT_COMPRESS;
 static int buf_width = DEFAULT_WIDTH;
 
 static int main_argc = 1;
-static char *default_argv = "application";
-static char **main_argv = &default_argv;
+static const char *default_argv = "application";
+static const char **main_argv = &default_argv;
 
 static Tcl_Trace debug_handle;
 static int step_count = 1;	/* count next/step */
@@ -210,7 +210,7 @@ save_re_matches(
 static int
 breakpoint_test(
     Tcl_Interp *interp,
-    char *cmd,			/* command about to be executed */
+    const char *cmd,		/* command about to be executed */
     struct breakpoint *bp)	/* breakpoint to test */
 {
     if (bp->re) {
@@ -389,7 +389,7 @@ char *
 print_argv(
     Tcl_Interp *interp,
     int argc,
-    char *argv[])
+    const char *argv[])
 {
 	static int buf_width_max = DEFAULT_WIDTH;
 	static char buf_basic[DEFAULT_WIDTH+1];	/* basic buffer */
@@ -428,10 +428,7 @@ print_argv(
 		if (proc && (arg_index > 1)) wrap = TRUE;
 		else {
 			(void) TclFindElement(interp,*argv,
-#if TCL_MAJOR_VERSION >= 8
-					      -1,
-#endif
-				&elementPtr,&nextPtr,(Tcl_Size) 0,(Tcl_Size) 0);
+				    -1, &elementPtr,&nextPtr, NULL, NULL);
 			if (*elementPtr == '\0') wrap = TRUE;
 			else if (*nextPtr == '\0') wrap = FALSE;
 			else wrap = TRUE;
@@ -471,12 +468,12 @@ char *
 print_objv(
     Tcl_Interp *interp,
     int objc,
-    Tcl_Obj *objv[])
+    Tcl_Obj * const objv[])
 {
-    char **argv;
+    const char **argv;
     int argc;
     Tcl_Size len;
-    argv = (char **)ckalloc(objc+1 * sizeof(char *));
+    argv = (const char **)ckalloc(objc+1 * sizeof(char *));
     for (argc=0 ; argc<objc ; argc++) {
 	argv[argc] = Tcl_GetStringFromObj(objv[argc],&len);
     }
@@ -1242,13 +1239,13 @@ Dbg_Active(
 	return debugger_active;
 }
 
-char **
+const char * const*
 Dbg_ArgcArgv(
     int argc,
-    char *argv[],
+    const char * argv[],
     int copy)
 {
-	char **alloc;
+	const char **alloc;
 
 	main_argc = argc;
 
@@ -1256,7 +1253,7 @@ Dbg_ArgcArgv(
 		main_argv = argv;
 		alloc = 0;
 	} else {
-		main_argv = alloc = (char **)ckalloc((argc+1)*sizeof(char *));
+		main_argv = alloc = (const char **)ckalloc((argc+1)*sizeof(char *));
 		while (argc-- >= 0) {
 			*main_argv++ = *argv++;
 		}

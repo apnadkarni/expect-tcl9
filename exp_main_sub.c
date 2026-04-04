@@ -48,7 +48,7 @@ char exp_version[] = PACKAGE_VERSION;
 #define NEED_TCL_MAJOR		7
 #define NEED_TCL_MINOR		5
 
-char *exp_argv0 = "this program";	/* default program name */
+const char *exp_argv0 = "this program";	/* default program name */
 void (*exp_app_exit)() = 0;
 void (*exp_event_exit)() = 0;
 FILE *exp_cmdfile = 0;
@@ -663,7 +663,7 @@ void
 exp_parse_argv(
     Tcl_Interp *interp,
     int argc,
-    char **argv)
+    char * const*argv)
 {
 	char argc_rep[10]; /* enough space for storing literal rep of argc */
 
@@ -681,7 +681,14 @@ exp_parse_argv(
 	exp_argv0 = argv[0];
 
 #ifdef TCL_DEBUGGER
-	Dbg_ArgcArgv(argc,argv,1);
+	/*
+	 * TODO - removing the cast is painful. getopt requires parameter of
+	 * type "char *const *" and so argv is of that type. On the other
+	 * hand Dbg_ArgcArgv require "const char **" and the two are not
+	 * compatible. Any changes percolate up and down the call chain and
+	 * the single cast is the least bad solution.
+	 */
+	Dbg_ArgcArgv(argc, (const char **)argv,1);
 #endif
 
 	/* initially, we must assume we are not interactive */
