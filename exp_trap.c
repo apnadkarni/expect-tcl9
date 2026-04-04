@@ -68,8 +68,8 @@ static int got_sig;		/* this records the last signal received */
 static Tcl_AsyncHandler async_handler;
 
 static const char *
-signal_to_string(sig)
-int sig;
+signal_to_string(
+    int sig)
 {
 	if (sig <= 0 || sig > NSIG) return("SIGNAL OUT OF RANGE");
 	return(traps[sig].name);
@@ -85,10 +85,10 @@ int exp_nostack_dump = FALSE;	/* TRUE if user has requested unrolling of */
 
 /*ARGSUSED*/
 static int
-tophalf(clientData,interp,code)
-ClientData clientData;
-Tcl_Interp *interp;
-int code;
+tophalf(
+    ClientData clientData,
+    Tcl_Interp *interp,
+    int code)
 {
 	struct trap *trap;	/* last trap processed */
 	int rc;
@@ -172,8 +172,8 @@ static int rearming_sigchld = FALSE;
 
 /* called upon receipt of a user-declared signal */
 static void
-bottomhalf(sig)
-int sig;
+bottomhalf(
+    int sig)
 {
 #ifdef REARM_SIG
 	/*
@@ -217,8 +217,8 @@ int sig;
 
 /*ARGSUSED*/
 void
-exp_rearm_sigchld(interp)
-Tcl_Interp *interp;
+exp_rearm_sigchld(
+    Tcl_Interp *interp)
 {
 #ifdef REARM_SIG
 	if (rearm_sigchld) {
@@ -276,9 +276,9 @@ exp_init_trap()
 /* given signal index or name as string, */
 /* returns signal index or -1 if bad arg */
 int
-exp_string_to_signal(interp,s)
-Tcl_Interp *interp;
-char *s;
+exp_string_to_signal(
+    Tcl_Interp *interp,
+    char *s)
 {
 	int sig;
 	const char *name;
@@ -301,11 +301,11 @@ char *s;
 
 /*ARGSUSED*/
 int
-Exp_TrapObjCmd(clientData, interp, objc, objv)
-ClientData clientData;
-Tcl_Interp *interp;
-int objc;
-Tcl_Obj *const objv[];
+Exp_TrapObjCmd(
+    ClientData clientData,
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const objv[])
 {
 	char *action = 0;
 	Tcl_Size n;		/* number of signals in list */
@@ -550,8 +550,8 @@ cmd_data[]  = {
 {0}};
 
 void
-exp_init_trap_cmds(interp)
-Tcl_Interp *interp;
+exp_init_trap_cmds(
+    Tcl_Interp *interp)
 {
 	exp_create_commands(interp,cmd_data);
 }

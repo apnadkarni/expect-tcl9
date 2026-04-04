@@ -88,8 +88,8 @@ static int env_valid = FALSE;	/* whether we can longjmp or not */
 
 /*ARGSUSED*/
 static RETSIGTYPE
-sigalarm_handler(n)
-int n;		/* unused, for compatibility with STDC */
+sigalarm_handler(
+    int n)		/* unused, for compatibility with STDC */
 {
 #ifdef REARM_SIG
 	signal(SIGALRM,sigalarm_handler);
@@ -106,11 +106,11 @@ int n;		/* unused, for compatibility with STDC */
 
 /* interruptable read */
 static int
-i_read(fd,buffer,length,timeout)
-int fd;
-char *buffer;
-int length;
-int timeout;
+i_read(
+    int fd,
+    char *buffer,
+    int length,
+    int timeout)
 {
 	int cc = -2;
 
@@ -310,15 +310,15 @@ exp_pty_lock(
 static void		(*expDiagLogPtrVal) (const char *);
 
 void
-expDiagLogPtrSet(fn)
-     void (*fn) (const char *);
+expDiagLogPtrSet(
+    void (*fn) (const char *))
 {
   expDiagLogPtrVal = fn;
 }
 
 void
-expDiagLogPtr(str)
-     char *str;
+expDiagLogPtr(
+    char *str)
 {
   (*expDiagLogPtrVal)(str);
 }
@@ -326,9 +326,9 @@ expDiagLogPtr(str)
 
 
 void
-expDiagLogPtrX(fmt,num)
-     char *fmt;
-     int num;
+expDiagLogPtrX(
+    char *fmt,
+    int num)
 {
   static char buf[1000];
   sprintf(buf,fmt,num);
@@ -337,9 +337,9 @@ expDiagLogPtrX(fmt,num)
 
 
 void
-expDiagLogPtrStr(fmt,str1)
-     char *fmt;
-     char *str1;
+expDiagLogPtrStr(
+    char *fmt,
+    char *str1)
 {
   static char buf[1000];
   sprintf(buf,fmt,str1);
@@ -347,9 +347,10 @@ expDiagLogPtrStr(fmt,str1)
 }
 
 void
-expDiagLogPtrStrStr(fmt,str1,str2)
-     char *fmt;
-     char *str1, *str2;
+expDiagLogPtrStrStr(
+    char *fmt,
+    char *str1,
+    char *str2)
 {
   static char buf[1000];
   sprintf(buf,fmt,str1,str2);
@@ -359,15 +360,15 @@ expDiagLogPtrStrStr(fmt,str1,str2)
 static const char *		(*expErrnoMsgVal) (int);
 
 const char *
-expErrnoMsg(errorNo)
-int errorNo;
+expErrnoMsg(
+    int errorNo)
 {
   return (*expErrnoMsgVal)(errorNo);
 }
 
 void
-expErrnoMsgSet(fn)
-     const char * (*fn) (int);
+expErrnoMsgSet(
+    const char * (*fn) (int))
 {
   expErrnoMsgVal = fn;
 }
