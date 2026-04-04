@@ -264,9 +264,9 @@ const char *s;
 #endif /*0*/
 
 static void
-pty_stty(s,name)
-char *s;		/* args to stty */
-char *name;		/* name of pty */
+pty_stty(
+    char *s,		/* args to stty */
+    char *name)		/* name of pty */
 {
 #define MAX_ARGLIST 10240
 	char buf[MAX_ARGLIST];	/* overkill is easier */
@@ -290,13 +290,13 @@ exp_tty exp_tty_original;
 #define GET_TTYTYPE	0
 #define SET_TTYTYPE	1
 static void
-ttytype(request,fd,ttycopy,ttyinit,s)
-int request;
-int fd;
-		/* following are used only if request == SET_TTYTYPE */
-int ttycopy;	/* true/false, copy from /dev/tty */
-int ttyinit;	/* if true, initialize to sane state */
-char *s;	/* stty args */
+ttytype(
+    int request,
+    int fd,
+			/* following are used only for request SET_TTYTYPE */
+    int ttycopy,	/* true/false, copy from /dev/tty */
+    int ttyinit,	/* if true, initialize to sane state */
+    char *s)		/* stty args */
 {
 	if (request == GET_TTYTYPE) {
 #ifdef HAVE_TCSETATTR
@@ -630,9 +630,9 @@ exp_getptymaster()
 /*   after slave is opened */
 /*ARGSUSED*/
 void
-exp_slave_control(master,control)
-int master;
-int control;	/* if 1, enable pty trapping of close/open/ioctl */
+exp_slave_control(
+    int master,
+    int control)	/* if 1, enable pty trapping of close/open/ioctl */
 {
 #ifdef HAVE_PTYTRAP
 	ioctl(master, TIOCTRAP, &control);

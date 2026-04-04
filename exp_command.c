@@ -3497,9 +3497,9 @@ exp_flageq_code(
 }
 
 void
-exp_create_commands(interp,c)
-    Tcl_Interp *interp;
-    struct exp_cmd_data *c;
+exp_create_commands(
+    Tcl_Interp *interp,
+    struct exp_cmd_data *c)
 {
     Namespace *globalNsPtr = (Namespace *) Tcl_GetGlobalNamespace(interp);
     Namespace *currNsPtr   = (Namespace *) Tcl_GetCurrentNamespace(interp);

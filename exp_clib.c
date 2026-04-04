@@ -384,8 +384,8 @@ static int strcspn (char *s1, char *s2);
  * of the structure of the compiled regexp.
  */
 regexp *
-TclRegComp(exp)
-char *exp;
+TclRegComp(
+    char *exp)
 {
 	register regexp *r;
 	register char *scan;
@@ -475,10 +475,10 @@ char *exp;
  * follows makes it hard to avoid.
  */
 static char *
-reg(paren, flagp, rcstate)
-int paren;			/* Parenthesized? */
-int *flagp;
-struct regcomp_state *rcstate;
+reg(
+    int paren,			/* Parenthesized? */
+    int *flagp,
+    struct regcomp_state *rcstate)
 {
 	register char *ret;
 	register char *br;
@@ -548,9 +548,9 @@ struct regcomp_state *rcstate;
  * Implements the concatenation operator.
  */
 static char *
-regbranch(flagp, rcstate)
-int *flagp;
-struct regcomp_state *rcstate;
+regbranch(
+    int *flagp,
+    struct regcomp_state *rcstate)
 {
 	register char *ret;
 	register char *chain;
@@ -589,9 +589,9 @@ struct regcomp_state *rcstate;
  * endmarker role is not redundant.
  */
 static char *
-regpiece(flagp, rcstate)
-int *flagp;
-struct regcomp_state *rcstate;
+regpiece(
+    int *flagp,
+    struct regcomp_state *rcstate)
 {
 	register char *ret;
 	register char op;
@@ -654,9 +654,9 @@ struct regcomp_state *rcstate;
  * separate node; the code is simpler that way and it's not worth fixing.
  */
 static char *
-regatom(flagp, rcstate)
-int *flagp;
-struct regcomp_state *rcstate;
+regatom(
+   int *flagp,
+   struct regcomp_state *rcstate)
 {
 	register char *ret;
 	int flags;
@@ -764,9 +764,9 @@ struct regcomp_state *rcstate;
  - regnode - emit a node
  */
 static char *			/* Location. */
-regnode(op, rcstate)
-int op;
-struct regcomp_state *rcstate;
+regnode(
+    int op,
+    struct regcomp_state *rcstate)
 {
 	register char *ret;
 	register char *ptr;
@@ -790,9 +790,9 @@ struct regcomp_state *rcstate;
  - regc - emit (if appropriate) a byte of code
  */
 static void
-regc(b, rcstate)
-int b;
-struct regcomp_state *rcstate;
+regc(
+    int b,
+    struct regcomp_state *rcstate)
 {
 	if (rcstate->regcode != &regdummy)
 		*rcstate->regcode++ = (char)b;
@@ -806,10 +806,10 @@ struct regcomp_state *rcstate;
  * Means relocating the operand.
  */
 static void
-reginsert(op, opnd, rcstate)
-int op;
-char *opnd;
-struct regcomp_state *rcstate;
+reginsert(
+    int op,
+    char *opnd,
+    struct regcomp_state *rcstate)
 {
 	register char *src;
 	register char *dst;
@@ -836,9 +836,9 @@ struct regcomp_state *rcstate;
  - regtail - set the next-pointer at the end of a node chain
  */
 static void
-regtail(p, val)
-char *p;
-char *val;
+regtail(
+    char *p,
+    char *val)
 {
 	register char *scan;
 	register char *temp;
@@ -868,9 +868,9 @@ char *val;
  - regoptail - regtail on operand of first argument; nop if operandless
  */
 static void
-regoptail(p, val)
-char *p;
-char *val;
+regoptail(
+    char *p,
+    char *val)
 {
 	/* "Operandless" and "op != BRANCH" are synonymous in practice. */
 	if (p == NULL || p == &regdummy || OP(p) != BRANCH)
@@ -912,10 +912,10 @@ static char *regprop (char *op);
  - TclRegExec - match a regexp against a string
  */
 int
-TclRegExec(prog, string, start)
-register regexp *prog;
-register char *string;
-char *start;
+TclRegExec(
+    regexp *prog,
+    char *string,
+    char *start)
 {
 	register char *s;
 	struct regexec_state state;
@@ -977,10 +977,10 @@ char *start;
  - regtry - try match at specific point
  */
 static int			/* 0 failure, 1 success */
-regtry(prog, string, restate)
-regexp *prog;
-char *string;
-struct regexec_state *restate;
+regtry(
+    regexp *prog,
+    char *string,
+    struct regexec_state *restate)
 {
 	register int i;
 	register char **sp;
@@ -1015,9 +1015,9 @@ struct regexec_state *restate;
  * by recursion.
  */
 static int			/* 0 failure, 1 success */
-regmatch(prog, restate)
-char *prog;
-struct regexec_state *restate;
+regmatch(
+    char *prog,
+    struct regexec_state *restate)
 {
     register char *scan;	/* Current node. */
     char *next;		/* Next node. */
@@ -1216,9 +1216,9 @@ struct regexec_state *restate;
  - regrepeat - repeatedly match something simple, report how many
  */
 static int
-regrepeat(p, restate)
-char *p;
-struct regexec_state *restate;
+regrepeat(
+    char *p,
+    struct regexec_state *restate)
 {
 	register int count = 0;
 	register char *scan;
@@ -1263,8 +1263,8 @@ struct regexec_state *restate;
  - regnext - dig the "next" pointer out of a node
  */
 static char *
-regnext(p)
-register char *p;
+regnext(
+    register char *p)
 {
 	register int offset;
 
@@ -1471,8 +1471,8 @@ char *s2;
  */
 
 void
-exp_TclRegError(string)
-    char *string;			/* Error message. */
+exp_TclRegError(
+    char *string)			/* Error message. */
 {
     errMsg = string;
 }
@@ -1495,8 +1495,8 @@ TclGetRegError()
 
 static
 void
-expDiagLogU(str)
-     const char *str;
+expDiagLogU(
+    const char *str)
 {
   if (exp_is_debugging) {
     fprintf(stderr,"%s",str);
@@ -1510,6 +1510,10 @@ expDiagLogU(str)
 
 #include "expect.h"
 #include "exp_int.h"
+#include "exp_pty.h"
+
+static char *exp_printify(char *s);
+
 
 /* exp_glob.c - expect functions for doing glob
  *
@@ -1536,10 +1540,9 @@ expDiagLogU(str)
  */
 static
 int
-Exp_StringMatch2(string,pattern)
-    register char *string;	/* String. */
-    register char *pattern;	/* Pattern, which may contain
-				 * special characters. */
+Exp_StringMatch2(
+    char *string,	/* String. */
+    char *pattern)	/* Pattern, which may contain special characters. */
 {
     char c2;
     int match = 0;	/* # of chars matched */
@@ -1669,10 +1672,10 @@ Exp_StringMatch2(string,pattern)
 
 static
 int	/* returns # of chars that matched */
-Exp_StringMatch(string, pattern,offset)
-char *string;
-char *pattern;
-int *offset;	/* offset from beginning of string where pattern matches */
+Exp_StringMatch(
+    char *string,
+    char *pattern,
+    int *offset)	/* offset where pattern matches */
 {
 	char *s;
 	int sm;	/* count of chars matched or -1 */
@@ -1749,11 +1752,6 @@ FILE *exp_logfile = 0;
 int exp_logfile_all = FALSE;	/* if TRUE, write log of all interactions */
 int exp_loguser = TRUE;		/* if TRUE, user sees interactions on stdout */
 
-
-char *exp_printify(char *s);
-int exp_getptymaster();
-int exp_getptyslave();
-
 #define sysreturn(x)	return(errno = x, -1)
 
 void exp_init_pty();
@@ -1784,17 +1782,17 @@ static int fd_alloc_max = -1;	/* max fd allocated */
 
 /* translate fd or fp to fd */
 static struct f *
-fdfp2f(fd,fp)
-int fd;
-FILE *fp;
+fdfp2f(
+    int fd,
+    FILE *fp)
 {
 	if (fd == -1) return(fs + fileno(fp));
 	else return(fs + fd);
 }
 
 static struct f *
-fd_new(fd)
-int fd;
+fd_new(
+    int fd)
 {
 	int i, low;
 	struct f *fp;
@@ -1851,9 +1849,9 @@ exp_setpgrp()
 
 /* returns fd of master side of pty */
 int
-exp_spawnv(file,argv)
-char *file;
-char *argv[];	/* some compiler complains about **argv? */
+exp_spawnv(
+    char *file,
+    char *argv[])	/* some compiler complains about **argv? */
 {
 	int cc;
 	int errorfd;	/* place to stash fileno(stderr) in child */
@@ -2284,8 +2282,8 @@ exp_spawnl (char * arg1,...)
 
 /* allow user-provided fd to be passed to expect funcs */
 int
-exp_spawnfd(fd)
-int fd;
+exp_spawnfd(
+    int fd)
 {
 	if (!fd_new(fd)) {
 		errno = ENOMEM;
@@ -2298,9 +2296,9 @@ int fd;
 /* not strlen(s).  This count does not include the trailing null. */
 /* returns number of nulls removed. */
 static int
-rm_nulls(s,c)
-char *s;
-int c;
+rm_nulls(
+    char *s,
+    int c)
 {
 	char *s2 = s;	/* points to place in original string to put */
 			/* next non-null character */
@@ -2323,8 +2321,8 @@ static int i_read_errno;/* place to save errno, if i_read() == -1, so it
 
 /*ARGSUSED*/
 static void
-sigalarm_handler(n)
-int n;			/* signal number, unused by us */
+sigalarm_handler(
+int n)			/* signal number, unused by us */
 {
 #ifdef REARM_SIG
 	signal(SIGALRM,sigalarm_handler);
@@ -2339,12 +2337,12 @@ int n;			/* signal number, unused by us */
 
 /* interruptable read */
 static int
-i_read(fd,fp,buffer,length,timeout)
-int fd;
-FILE *fp;
-char *buffer;
-int length;
-int timeout;
+i_read(
+    int fd,
+    FILE *fp,
+    char *buffer,
+    int length,
+    int timeout)
 {
 	int cc = -2;
 
@@ -2446,10 +2444,10 @@ int timeout;
 	exp_match_end
 */
 static int
-expectv(fd,fp,ecases)
-int fd;
-FILE *fp;
-struct exp_case *ecases;
+expectv(
+    int fd,
+    FILE *fp,
+    struct exp_case *ecases)
 {
 	int cc = 0;		/* number of chars returned in a single read */
 	int buf_length;		/* numbers of chars in exp_buffer */
@@ -2712,17 +2710,17 @@ struct exp_case *ecases;
 }
 
 int
-exp_fexpectv(fp,ecases)
-FILE *fp;
-struct exp_case *ecases;
+exp_fexpectv(
+    FILE *fp,
+    struct exp_case *ecases)
 {
 	return(expectv(-1,fp,ecases));
 }
 
 int
-exp_expectv(fd,ecases)
-int fd;
-struct exp_case *ecases;
+exp_expectv(
+    int fd,
+    struct exp_case *ecases)
 {
 	return(expectv(fd,(FILE *)0,ecases));
 }
@@ -2862,8 +2860,8 @@ exp_fexpectl (FILE * arg1,...)
 
 /* like popen(3) but works in both directions */
 FILE *
-exp_popen(program)
-char *program;
+exp_popen(
+    char *program)
 {
 	FILE *fp;
 	int ec;
@@ -2955,7 +2953,7 @@ exp_errorlog TCL_VARARGS_DEF(char *,arg1)
 
 #include <ctype.h>
 
-char *
+static char *
 exp_printify(char *s)
 {
 	static int destlen = 0;

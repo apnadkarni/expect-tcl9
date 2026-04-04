@@ -82,13 +82,13 @@ exp_tty exp_tty_original;
 #define GET_TTYTYPE	0
 #define SET_TTYTYPE	1
 static void
-ttytype(request,fd,ttycopy,ttyinit,s)
-int request;
-int fd;
-		/* following are used only if request == SET_TTYTYPE */
-int ttycopy;	/* if true, copy from /dev/tty */
-int ttyinit;	/* if true, initialize to sane state */
-char *s;	/* stty args */
+ttytype(
+    int request,
+    int fd,
+		 	/* following used only if request == SET_TTYTYPE */
+    int ttycopy,	/* true/false, copy from /dev/tty */
+    int ttyinit,	/* if true, initialize to sane state */
+    char *s)		/* stty args, used only if request == SET_TTYTYPE */
 {
 	static struct	tchars tc;		/* special characters */
 	static struct	ltchars lc;		/* local special characters */
@@ -215,9 +215,9 @@ exp_getptymaster()
 /* see comment in pty_termios.c */
 /*ARGSUSED*/
 void
-exp_slave_control(master,control)
-int master;
-int control;
+exp_slave_control(
+    int master,
+    int control)
 {
 }
 

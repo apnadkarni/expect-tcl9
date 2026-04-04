@@ -119,9 +119,9 @@ static Tcl_ThreadDataKey dataKey;
 
 	/* ARGSUSED */
 static int
-ExpBlockModeProc(instanceData, mode)
-    ClientData instanceData;		/* Exp state. */
-    int mode;				/* The mode to set. Can be one of
+ExpBlockModeProc(
+    ClientData instanceData,		/* Exp state. */
+    int mode)				/* The mode to set. Can be one of
 					 * TCL_MODE_BLOCKING or
 					 * TCL_MODE_NONBLOCKING. */
 {
@@ -157,9 +157,9 @@ ExpBlockModeProc(instanceData, mode)
 }
 
 int
-expSetBlockModeProc(fd, mode)
-    int fd;
-    int mode;				/* The mode to set. Can be one of
+expSetBlockModeProc(
+    int fd,
+    int mode)				/* The mode to set. Can be one of
 					 * TCL_MODE_BLOCKING or
 					 * TCL_MODE_NONBLOCKING. */
 {
@@ -211,12 +211,12 @@ expSetBlockModeProc(fd, mode)
  */
 
 static int
-ExpInputProc(instanceData, buf, toRead, errorCodePtr)
-    ClientData instanceData;		/* Exp state. */
-    char *buf;				/* Where to store data read. */
-    int toRead;				/* How much space is available
-                                         * in the buffer? */
-    int *errorCodePtr;			/* Where to store error code. */
+ExpInputProc(
+    ClientData instanceData,		/* Exp state. */
+    char *buf,				/* Where to store data read. */
+    int toRead,				/* How much space is available
+                                        * in the buffer? */
+    int *errorCodePtr)			/* Where to store error code. */
 {
     ExpState *esPtr = (ExpState *) instanceData;
     int bytesRead;			/* How many bytes were actually
@@ -272,11 +272,11 @@ ExpInputProc(instanceData, buf, toRead, errorCodePtr)
  */
 
 static int
-ExpOutputProc(instanceData, buf, toWrite, errorCodePtr)
-    ClientData instanceData;		/* Exp state. */
-    const char *buf;				/* The data buffer. */
-    int toWrite;			/* How many bytes to write? */
-    int *errorCodePtr;			/* Where to store error code. */
+ExpOutputProc(
+    ClientData instanceData,		/* Exp state. */
+    const char *buf,				/* The data buffer. */
+    int toWrite,			/* How many bytes to write? */
+    int *errorCodePtr)			/* Where to store error code. */
 {
     ExpState *esPtr = (ExpState *) instanceData;
     int written = 0;
@@ -325,9 +325,9 @@ ExpOutputProc(instanceData, buf, toWrite, errorCodePtr)
 
 /*ARGSUSED*/
 static int
-ExpCloseProc(instanceData, interp)
-    ClientData instanceData;	/* Exp state. */
-    Tcl_Interp *interp;		/* For error reporting - unused. */
+ExpCloseProc(
+    ClientData instanceData,	/* Exp state. */
+    Tcl_Interp *interp)		/* For error reporting - unused. */
 {
     ExpState *esPtr = (ExpState *) instanceData;
     ExpState **nextPtrPtr;
@@ -382,10 +382,10 @@ ExpCloseProc(instanceData, interp)
 }
 /*ARGSUSED*/
 static int
-ExpClose2Proc(instanceData, interp, flags)
-    ClientData instanceData;	/* Exp state. */
-    Tcl_Interp *interp;		/* For error reporting - unused. */
-    int flags;			/*  */
+ExpClose2Proc(
+    ClientData instanceData,	/* Exp state. */
+    Tcl_Interp *interp,		/* For error reporting - unused. */
+    int flags)			/* 0 or TCL_CLOSE_READ or TCL_CLOSE_WRITE */
 {
     /*
      * Ignore calls that have either TCL_CLOSE_READ or TCL_CLOSE_WRITE set.
@@ -418,9 +418,9 @@ ExpClose2Proc(instanceData, interp, flags)
  */
 
 static void
-ExpWatchProc(instanceData, mask)
-    ClientData instanceData;		/* The exp state. */
-    int mask;				/* Events of interest; an OR-ed
+ExpWatchProc(
+    ClientData instanceData,		/* The exp state. */
+    int mask)				/* Events of interest; an OR-ed
                                          * combination of TCL_READABLE,
                                          * TCL_WRITABLE and TCL_EXCEPTION. */
 {
@@ -463,10 +463,10 @@ ExpWatchProc(instanceData, mask)
  */
 
 static int
-ExpGetHandleProc(instanceData, direction, handlePtr)
-    ClientData instanceData;	/* The exp state. */
-    int direction;		/* TCL_READABLE or TCL_WRITABLE */
-    ClientData *handlePtr;	/* Where to store the handle.  */
+ExpGetHandleProc(
+    ClientData instanceData,	/* The exp state. */
+    int direction,		/* TCL_READABLE or TCL_WRITABLE */
+    ClientData *handlePtr)	/* Where to store the handle.  */
 {
     ExpState *esPtr = (ExpState *) instanceData;
 
@@ -489,9 +489,9 @@ expChannelCountGet()
 }
 
 int
-expChannelStillAlive(esBackupPtr, backupName)
-     ExpState *esBackupPtr;
-     char *backupName;
+expChannelStillAlive(
+     ExpState *esBackupPtr,
+     char *backupName)
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
     ExpState *esPtr;
@@ -532,10 +532,10 @@ expSizeZero(esPtr)
 #endif
 /* return 0 for success or negative for failure */
 int
-expWriteChars(esPtr,buffer,lenBytes)
-     ExpState *esPtr;
-     const char *buffer;
-     int lenBytes;
+expWriteChars(
+    ExpState *esPtr,
+    const char *buffer,
+    int lenBytes)
 {
   int rc;
  retry:
@@ -555,10 +555,10 @@ expWriteChars(esPtr,buffer,lenBytes)
 }
 
 int
-expWriteCharsUni(esPtr,buffer,lenChars)
-     ExpState *esPtr;
-     const Tcl_UniChar *buffer;
-     int lenChars;
+expWriteCharsUni(
+    ExpState *esPtr,
+    const Tcl_UniChar *buffer,
+    int lenChars)
 {
   int rc;
   Tcl_DString ds;
@@ -574,8 +574,8 @@ expWriteCharsUni(esPtr,buffer,lenChars)
 }
 
 void
-expStateFree(esPtr)
-    ExpState *esPtr;
+expStateFree(
+    ExpState *esPtr)
 {
   if (esPtr->fdBusy) {
     close(esPtr->fdin);
@@ -595,8 +595,8 @@ expStateFree(esPtr)
  * via spawn -open, Tcl can hang if we don't close the connections first.
  */
 void
-exp_close_all(interp)
-Tcl_Interp *interp;
+exp_close_all(
+    Tcl_Interp *interp)
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
     ExpState *esPtr;
@@ -707,11 +707,11 @@ exp_background_channelhandlers_run_all()
 }
 
 ExpState *
-expCreateChannel(interp,fdin,fdout,pid)
-    Tcl_Interp *interp;
-    int fdin;
-    int fdout;
-    int pid;
+expCreateChannel(
+    Tcl_Interp *interp,
+    int fdin,
+    int fdout,
+    int pid)
 {
     ExpState *esPtr;
     int mask;

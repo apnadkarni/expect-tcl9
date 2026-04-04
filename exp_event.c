@@ -34,15 +34,15 @@ typedef struct ThreadSpecificData {
 static Tcl_ThreadDataKey dataKey;
 
 void
-exp_event_disarm_bg(esPtr)
-ExpState *esPtr;
+exp_event_disarm_bg(
+    ExpState *esPtr)
 {
     Tcl_DeleteChannelHandler(esPtr->channel,exp_background_channelhandler,(ClientData)esPtr);
 }
 
 static void
-exp_arm_background_channelhandler_force(esPtr)
-ExpState *esPtr;
+exp_arm_background_channelhandler_force(
+    ExpState *esPtr)
 {
     Tcl_CreateChannelHandler(esPtr->channel,
 	    TCL_READABLE|TCL_EXCEPTION,
@@ -53,8 +53,8 @@ ExpState *esPtr;
 }
 
 void
-exp_arm_background_channelhandler(esPtr)
-ExpState *esPtr;
+exp_arm_background_channelhandler(
+    ExpState *esPtr)
 {
     switch (esPtr->bg_status) {
 	case unarmed:
@@ -71,8 +71,8 @@ ExpState *esPtr;
 }
 
 void
-exp_disarm_background_channelhandler(esPtr)
-ExpState *esPtr;
+exp_disarm_background_channelhandler(
+    ExpState *esPtr)
 {
     switch (esPtr->bg_status) {
 	case blocked:
@@ -93,8 +93,8 @@ ExpState *esPtr;
 /* After exp_close returns, we will not have an opportunity to disarm */
 /* because the fd will be invalid, so we force it here. */
 void
-exp_disarm_background_channelhandler_force(esPtr)
-ExpState *esPtr;
+exp_disarm_background_channelhandler_force(
+    ExpState *esPtr)
 {
     switch (esPtr->bg_status) {
 	case blocked:
@@ -112,8 +112,8 @@ ExpState *esPtr;
 /* this can only be called at the end of the bg handler in which */
 /* case we know the status is some kind of "blocked" */
 void
-exp_unblock_background_channelhandler(esPtr)
-    ExpState *esPtr;
+exp_unblock_background_channelhandler(
+    ExpState *esPtr)
 {
     switch (esPtr->bg_status) {
 	case blocked:
@@ -130,8 +130,8 @@ exp_unblock_background_channelhandler(esPtr)
 /* this can only be called at the beginning of the bg handler in which */
 /* case we know the status must be "armed" */
 void
-exp_block_background_channelhandler(esPtr)
-ExpState *esPtr;
+exp_block_background_channelhandler(
+    ExpState *esPtr)
 {
     esPtr->bg_status = blocked;
     exp_event_disarm_bg(esPtr);
@@ -140,15 +140,15 @@ ExpState *esPtr;
 
 /*ARGSUSED*/
 static void
-exp_timehandler(clientData)
-ClientData clientData;
+exp_timehandler(
+    ClientData clientData)
 {
     *(int *)clientData = TRUE;	
 }
 
-static void exp_channelhandler(clientData,mask)
-ClientData clientData;
-int mask;
+static void exp_channelhandler(
+    ClientData clientData,
+    int mask)
 {
     ExpState *esPtr = (ExpState *)clientData;
 
@@ -159,8 +159,8 @@ int mask;
 }
 
 void
-exp_event_disarm_fg(esPtr)
-ExpState *esPtr;
+exp_event_disarm_fg(
+    ExpState *esPtr)
 {
     /*printf("DeleteChannelHandler: %s\r\n",esPtr->name);*/
     Tcl_DeleteChannelHandler(esPtr->channel,exp_channelhandler,(ClientData)esPtr);
@@ -173,13 +173,13 @@ ExpState *esPtr;
 /* returns status, one of EOF, TIMEOUT, ERROR or DATA */
 /* can now return RECONFIGURE, too */
 /*ARGSUSED*/
-int exp_get_next_event(interp,esPtrs,n,esPtrOut,timeout,key)
-Tcl_Interp *interp;
-ExpState *(esPtrs[]);
-int n;			/* # of esPtrs */
-ExpState **esPtrOut;	/* 1st ready esPtr, not set if none */
-int timeout;		/* seconds */
-int key;
+int exp_get_next_event(
+    Tcl_Interp *interp,
+    ExpState *(esPtrs[]),
+    int n,			/* # of esPtrs */
+    ExpState **esPtrOut,	/* 1st ready esPtr, not set if none */
+    int timeout,		/* seconds */
+    int key)
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -285,9 +285,9 @@ int key;
 /* This returns status, one of EOF, TIMEOUT, ERROR or DATA */
 /*ARGSUSED*/
 int
-exp_get_next_event_info(interp,esPtr)
-Tcl_Interp *interp;
-ExpState *esPtr;
+exp_get_next_event_info(
+    Tcl_Interp *interp,
+    ExpState *esPtr)
 {
 #ifdef HAVE_PTYTRAP
     struct request_info ioctl_info;
@@ -319,9 +319,9 @@ ExpState *esPtr;
 
 /*ARGSUSED*/
 int	/* returns TCL_XXX */
-exp_dsleep(interp,sec)
-Tcl_Interp *interp;
-double sec;
+exp_dsleep(
+    Tcl_Interp *interp,
+    double sec)
 {
     int timerFired = FALSE;
 
@@ -336,8 +336,8 @@ double sec;
 static char destroy_cmd[] = "destroy .";
 
 static void
-exp_event_exit_real(interp)
-Tcl_Interp *interp;
+exp_event_exit_real(
+    Tcl_Interp *interp)
 {
     Tcl_Eval(interp,destroy_cmd);
 }

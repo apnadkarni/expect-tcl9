@@ -517,18 +517,11 @@ exp_retoglob (
 }
 
 static void
-#ifdef _AIX
-ExpChopNested (Tcl_UniChar** xstr,
-	       int*          xstrlen,
-	       Tcl_UniChar   open,
-	       Tcl_UniChar   close)
-#else
-ExpChopNested (xstr,xstrlen, open, close)
-     Tcl_UniChar** xstr;
-     int*          xstrlen;
-     Tcl_UniChar   open;
-     Tcl_UniChar   close;
-#endif
+ExpChopNested (
+    Tcl_UniChar** xstr,
+    int*          xstrlen,
+    Tcl_UniChar   open,
+    Tcl_UniChar   close)
 {
   Tcl_UniChar* str    = *xstr;
   int          strlen = *xstrlen;
@@ -552,10 +545,10 @@ ExpChopNested (xstr,xstrlen, open, close)
 }
 
 static Tcl_UniChar*
-ExpLiteral (nexto, str, strlen)
-     Tcl_UniChar* nexto;
-     Tcl_UniChar* str;
-     int          strlen;
+ExpLiteral (
+    Tcl_UniChar* nexto,
+    Tcl_UniChar* str,
+    int          strlen)
 {
   int lastsz;
 
@@ -569,16 +562,10 @@ ExpLiteral (nexto, str, strlen)
 }
 
 static Tcl_UniChar
-#ifdef _AIX
-ExpBackslash (char prefix,
-	      Tcl_UniChar* str,
-	      int          strlen)
-#else
-ExpBackslash (prefix, str, strlen)
-     char prefix;
-     Tcl_UniChar* str;
-     int          strlen;
-#endif
+ExpBackslash (
+    char         prefix,
+    Tcl_UniChar* str,
+    int          strlen)
 {
   /* strlen <= 8 */
   char buf[20];
@@ -601,9 +588,9 @@ ExpBackslash (prefix, str, strlen)
 }
 
 static Tcl_UniChar*
-ExpCollapseStar (src, last)
-     Tcl_UniChar* src;
-     Tcl_UniChar* last;
+ExpCollapseStar (
+    Tcl_UniChar* src,
+    Tcl_UniChar* last)
 {
   Tcl_UniChar* dst, *base;
   int skip = 0;
@@ -648,9 +635,9 @@ ExpCollapseStar (src, last)
 }
 
 static Tcl_UniChar*
-ExpCollapseQForward (src, last)
-     Tcl_UniChar* src;
-     Tcl_UniChar* last;
+ExpCollapseQForward (
+    Tcl_UniChar* src,
+    Tcl_UniChar* last)
 {
   Tcl_UniChar* dst, *base;
   int skip = 0;
@@ -696,9 +683,9 @@ ExpCollapseQForward (src, last)
 }
 
 static Tcl_UniChar*
-ExpCollapseQBack (src, last)
-     Tcl_UniChar* src;
-     Tcl_UniChar* last;
+ExpCollapseQBack (
+    Tcl_UniChar* src,
+    Tcl_UniChar* last)
 {
   Tcl_UniChar* dst, *base;
   int skip = 0;
@@ -738,9 +725,9 @@ ExpCollapseQBack (src, last)
 }
 
 static int
-ExpCountStar (src, last)
-    Tcl_UniChar* src;
-    Tcl_UniChar* last;
+ExpCountStar (
+    Tcl_UniChar* src,
+    Tcl_UniChar* last)
 {
     int skip = 0;
     int stars = 0;

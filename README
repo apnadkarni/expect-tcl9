@@ -1,13 +1,19 @@
 This is a port of Expect for Tcl 9 with contributions from Paul
 Obermeier, Bernhard Rosenkränzer (OpenMadriva) and Ashok P. Nadkarni.
 
-Consider this a work-in-progress and not production-ready though
-all tests pass.
+Consider this a work-in-progress and not production-ready.
 
 The code currently only builds on Tcl 9. Future support for 8.6
 may or may not be added. Version has been bumped to 6.0a0 as C
 API may have some incompatibilities (due to const considerations).
 This is temporary.
+
+Following caveats apply:
+
+- due to changes related to ANSI C standard, the C API may *possibly* no
+longer be compatible
+- Only Linux distributions have been tested. Other platforms may not even
+compile.
 
 
 The original README is below.

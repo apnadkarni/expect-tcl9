@@ -29,13 +29,13 @@ Exp_StringCaseMatch2 (const Tcl_UniChar *string, /* String. */
 /* the '^') feature.  Exp_StringMatch2 does the rest of the work. */
 
 int	/* returns # of CHARS that matched */
-Exp_StringCaseMatch(string, strlen, pattern, plen, nocase, offset)		/* INTL */
-     Tcl_UniChar *string;
-     Tcl_UniChar *pattern;
-     int strlen;
-     int plen;
-     int nocase;
-     int *offset;	/* offset in chars from beginning of string where pattern matches */
+Exp_StringCaseMatch(
+    Tcl_UniChar *string,
+    int strlen,
+    Tcl_UniChar *pattern,
+    int plen,
+    int nocase,
+    int *offset)	/* offset in chars from beginning of string where pattern matches */
 {
     const Tcl_UniChar *s;
     const Tcl_UniChar *stop = string + strlen;
@@ -123,13 +123,13 @@ Exp_StringCaseMatch(string, strlen, pattern, plen, nocase, offset)		/* INTL */
 */
 
 static int
-Exp_StringCaseMatch2(string,stop,pattern,pstop,nocase)	/* INTL */
-     register const Tcl_UniChar *string; /* String. */
-     register const Tcl_UniChar *stop;   /* First char _after_ string */
-     register const Tcl_UniChar *pattern;	 /* Pattern, which may contain
-				 * special characters. */
-     register const Tcl_UniChar *pstop;   /* First char _after_ pattern */
-    int nocase;
+Exp_StringCaseMatch2(	/* INTL */
+    const Tcl_UniChar *string, /* String. */
+    const Tcl_UniChar *stop,   /* First char _after_ string */
+    const Tcl_UniChar *pattern,/* Pattern, which may contain
+                                         * special characters. */
+    const Tcl_UniChar *pstop,  /* First char _after_ pattern */
+    int nocase)
 {
     Tcl_UniChar ch1, ch2, p;
     int match = 0;	/* # of bytes matched */

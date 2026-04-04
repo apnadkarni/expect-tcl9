@@ -135,8 +135,10 @@ struct tm      *tp;
 #endif /* HAVE_STRFTIME */
 
 static int
-range(low,item,hi)
-int low, item, hi;
+range(
+    int low,
+    int item,
+    int hi)
 {
 	if (item < low) return low;
 	if (item > hi) return hi;
