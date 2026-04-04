@@ -1354,7 +1354,8 @@ Exp_SpawnObjCmd(
      */
 
     /* if exec failed, communicate the reason back to the parent */
-    write(status_pipe[1], &errno, sizeof errno);
+    int ignored = write(status_pipe[1], &errno, sizeof errno);
+    (void) ignored; /* silence warning about ignored function return */
     exit(-1);
     /*NOTREACHED*/
     parent_error:

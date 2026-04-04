@@ -2244,7 +2244,8 @@ when trapping, see below in child half of fork */
 	 * be *picked up in an expect or interact command.
 	 */
 
-	write(status_pipe[1], &errno, sizeof errno);
+	int ignored = write(status_pipe[1], &errno, sizeof errno);
+	(void) ignored; /* silence warning about ignored function return */
 	exit(-1);
 	/*NOTREACHED*/
 }
@@ -2883,9 +2884,11 @@ exp_disconnect()
 	if (exp_disconnected) sysreturn(EALREADY);
 	exp_disconnected = TRUE;
 
-	freopen("/dev/null","r",stdin);
-	freopen("/dev/null","w",stdout);
-	freopen("/dev/null","w",stderr);
+	FILE *ignored;
+	ignored = freopen("/dev/null", "r", stdin);
+	ignored = freopen("/dev/null","w",stdout);
+	ignored = freopen("/dev/null","w",stderr);
+	(void) ignored; /* silence warning about ignored function return */
 
 #ifdef POSIX
 	setsid();

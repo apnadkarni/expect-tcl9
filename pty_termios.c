@@ -278,7 +278,8 @@ pty_stty(
 	sprintf(buf,"%s %s < %s",STTY_BIN,s,name);
 #endif
 	old = signal(SIGCHLD, SIG_DFL);
-	system(buf);
+	int ignored = system(buf); /* TODO - handle errors returns? */
+	(void) ignored; /* silence warning about ignored function return */
 	signal(SIGCHLD, old);	/* restore signal handler */
 }
 
