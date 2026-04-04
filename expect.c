@@ -732,7 +732,6 @@ string_case_first(	/* INTL */
     Tcl_UniChar *s;
     char *p;
     int offset;
-    register int consumed = 0;
     Tcl_UniChar ch1, ch2;
     Tcl_UniChar *bufend = string + length;
 
@@ -741,7 +740,6 @@ string_case_first(	/* INTL */
 	p = pattern;
         while ((*s) && (s < bufend)) {
 	    ch1 = *s++;
-            consumed++;
 	    offset = TclUtfToUniChar(p, &ch2);
 	    if (Tcl_UniCharToLower(ch1) != Tcl_UniCharToLower(ch2)) {
 		break;
@@ -752,7 +750,6 @@ string_case_first(	/* INTL */
 	    return string;
 	}
 	string++;
-        consumed++;
     }
     return NULL;
 }
@@ -767,7 +764,6 @@ string_first(	/* INTL */
     Tcl_UniChar *s;
     char *p;
     int offset;
-    register int consumed = 0;
     Tcl_UniChar ch1, ch2;
     Tcl_UniChar *bufend = string + length;
     
@@ -776,7 +772,6 @@ string_first(	/* INTL */
 	p = pattern;
         while ((*s) && (s < bufend)) {
 	    ch1 = *s++;
-            consumed++;
 	    offset = TclUtfToUniChar(p, &ch2);
 	    if (ch1 != ch2) {
 		break;
@@ -787,7 +782,6 @@ string_first(	/* INTL */
 	    return string;
 	}
         string++;
-        consumed++;
     }
     return NULL;
 }

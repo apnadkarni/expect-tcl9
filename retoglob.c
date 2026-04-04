@@ -558,6 +558,7 @@ ExpLiteral (
     EMITC (*str);
     CHOP (1);
   }
+  (void) lastsz; /* silence warning (set but not used in EMITC) */
   return nexto;
 }
 

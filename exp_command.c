@@ -621,6 +621,10 @@ Exp_SpawnObjCmd(
     /* second comes from stty */
     /* third is our own signal that stty is done */
 
+    /* Avoid compiler unused variable warnings. (Only examined during debug) */
+    (void) slave_write_ioctls;
+    (void) slave_opens;
+
     int sync_fds[2];
     int sync2_fds[2];
     int status_pipe[2];
