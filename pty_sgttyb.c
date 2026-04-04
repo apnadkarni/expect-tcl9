@@ -222,10 +222,10 @@ int control;
 }
 
 int
-exp_getptyslave(ttycopy,ttyinit,stty_args)
-int ttycopy;
-int ttyinit;
-char *stty_args;
+exp_getptyslave(
+    int ttycopy,
+    int ttyinit,
+    char *stty_args)
 {
 	int slave;
 

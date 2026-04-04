@@ -133,6 +133,7 @@ AC_CHECK_HEADER(sys/fcntl.h,     AC_DEFINE(HAVE_SYS_FCNTL_H))
 AC_CHECK_HEADER(sys/ptem.h,      AC_DEFINE(HAVE_SYS_PTEM_H))
 AC_CHECK_HEADER(sys/strredir.h,  AC_DEFINE(HAVE_STRREDIR_H))
 AC_CHECK_HEADER(sys/strpty.h,    AC_DEFINE(HAVE_STRPTY_H))
+AC_CHECK_HEADER(pty.h,           AC_DEFINE(HAVE_PTY_H))
 
 AC_MSG_CHECKING([for sys/bsdtypes.h])
 if test "ISC_${ISC}" = "ISC_1"   ;    then

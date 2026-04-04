@@ -321,7 +321,7 @@ EXTERN void		exp_init_expect_cmds (Tcl_Interp *);
 EXTERN void		exp_init_most_cmds (Tcl_Interp *);
 EXTERN void		exp_init_trap_cmds (Tcl_Interp *);
 EXTERN void		exp_init_interact_cmds (Tcl_Interp *);
-EXTERN void		exp_init_tty_cmds();
+EXTERN void		exp_init_tty_cmds(Tcl_Interp *interp);
 
 EXTERN ExpState *	expStateCheck (Tcl_Interp *,ExpState *,int,int,char *);
 EXTERN ExpState *       expStateCurrent (Tcl_Interp *,int,int,int);

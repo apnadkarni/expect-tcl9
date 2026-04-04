@@ -66,6 +66,7 @@ would appreciate credit if this program or parts of it are used.
 #include "tcl.h"
 #include "string.h"
 #include "expect.h"
+#include "exp_int.h"
 #include "expect_tcl.h"
 #include "exp_rename.h"
 #include "exp_prog.h"
@@ -657,7 +658,7 @@ Exp_SpawnObjCmd(
 #endif
     };
 
-    Tcl_Channel channel;
+    Tcl_Channel channel = NULL;
     Tcl_DString dstring;
     Tcl_DStringInit(&dstring);
 

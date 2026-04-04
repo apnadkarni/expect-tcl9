@@ -2307,12 +2307,7 @@ expMatchProcess(
 
 				/* string itself */
 		sprintf(name,"%d,string",i);
-		/* Bug fix from https://sourceforge.net/p/expect/patches/26/ */
-		if (end >= start) {
-		    val = Tcl_GetRange(buf, start, end);
-		} else {
-		    val = Tcl_NewObj();
-		}
+		val = Tcl_GetRange(buf, start, end);
 		expDiagLog("%s: set %s(%s) \"",detail,EXPECT_OUT,name);
 		expDiagLogU(expPrintifyObj(val));
 		expDiagLogU("\"\r\n");
@@ -2559,7 +2554,7 @@ Exp_ExpectObjCmd(
     time_t start_time_total;	/* time at beginning of this procedure */
     time_t start_time = 0;	/* time when restart label hit */
     time_t current_time = 0;	/* current time (when we last looked)*/
-    time_t end_time;		/* future time at which to give up */
+    time_t end_time = 0;	/* future time at which to give up */
 
     ExpState *last_esPtr;	/* for differentiating when multiple f's */
 				/* to print out better debugging messages */

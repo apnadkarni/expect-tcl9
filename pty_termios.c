@@ -9,7 +9,6 @@ would appreciate credit if you use this file or parts of it.
 
 #include <stdio.h>
 #include <signal.h>
-#include <pty.h>
 
 extern char * expErrnoMsg    (int);
 
@@ -90,6 +89,10 @@ with openpty which supports 4000 while ptmx supports 60. */
 #  include <sys/fcntl.h>
 #else
 #  include <fcntl.h>
+#endif
+
+#ifdef HAVE_PTY_H
+#  include <pty.h>
 #endif
 
 #if defined(_SEQUENT_)

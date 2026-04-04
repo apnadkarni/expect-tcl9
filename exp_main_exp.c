@@ -13,6 +13,7 @@ would appreciate credit if this program or parts of it are used.
 #include "expect_cf.h"
 #include <stdio.h>
 #include "tcl.h"
+#include "exp_int.h"
 #include "expect_tcl.h"
 #include <stdlib.h>
 

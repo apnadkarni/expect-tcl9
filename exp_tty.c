@@ -34,6 +34,7 @@
 #endif
 
 #include "tcl.h"
+#include "exp_int.h"
 #include "exp_prog.h"
 #include "exp_rename.h"
 #include "exp_tty_in.h"
@@ -805,7 +806,7 @@ cmd_data[]  = {
 {0}};
 
 void
-exp_init_tty_cmds(struct Tcl_Interp *interp)
+exp_init_tty_cmds(Tcl_Interp *interp)
 {
 	exp_create_commands(interp,cmd_data);
 }

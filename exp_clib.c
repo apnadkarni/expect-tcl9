@@ -1750,7 +1750,7 @@ int exp_logfile_all = FALSE;	/* if TRUE, write log of all interactions */
 int exp_loguser = TRUE;		/* if TRUE, user sees interactions on stdout */
 
 
-char *exp_printify();
+char *exp_printify(char *s);
 int exp_getptymaster();
 int exp_getptyslave();
 
@@ -2465,7 +2465,7 @@ struct exp_case *ecases;
 	int remtime;		/* remaining time in timeout */
 
 	struct f *f;
-	int return_val;
+	int return_val = 0;
 	int sys_error = 0;
 #define return_normally(x)	{return_val = x; goto cleanup;}
 #define return_errno(x)	{sys_error = x; goto cleanup;}
@@ -2956,8 +2956,7 @@ exp_errorlog TCL_VARARGS_DEF(char *,arg1)
 #include <ctype.h>
 
 char *
-exp_printify(s)
-char *s;
+exp_printify(char *s)
 {
 	static int destlen = 0;
 	static char *dest = 0;

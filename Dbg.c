@@ -272,7 +272,7 @@ TclGetFrame2(interp, origFramePtr, string, framePtrPtr, dir)
 {
     Interp *iPtr = (Interp *) interp;
     int level, result;
-    CallFrame *framePtr;	/* frame currently being searched */
+    CallFrame *framePtr = NULL;	/* frame currently being searched */
 
     CallFrame *curFramePtr = iPtr->varFramePtr;
 

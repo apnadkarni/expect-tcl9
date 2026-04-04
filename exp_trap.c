@@ -53,7 +53,11 @@ static struct trap {
 
 int sigchld_count = 0;	/* # of sigchlds caught but not yet processed */
 
-static int eval_trap_action();
+static int eval_trap_action(
+    Tcl_Interp *interp,
+    int sig,
+    struct trap *trap,
+    int oldcode);
 
 static int got_sig;		/* this records the last signal received */
 				/* it is only a hint and can be wiped out */
@@ -432,11 +436,11 @@ Tcl_Obj *const objv[];
 
 /* called by tophalf() to process the given signal */
 static int
-eval_trap_action(interp,sig,trap,oldcode)
-Tcl_Interp *interp;
-int sig;
-struct trap *trap;
-int oldcode;
+eval_trap_action(
+    Tcl_Interp *interp,
+    int sig,
+    struct trap *trap,
+    int oldcode)
 {
 	int code_flag;
 	int newcode;

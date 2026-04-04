@@ -1014,8 +1014,7 @@ static struct exp_cmd_data cmd_data[]  = {
 {0}};
 
 void
-exp_init_main_cmds(interp)
-Tcl_Interp *interp;
+exp_init_main_cmds(Tcl_Interp *interp)
 {
 	exp_create_commands(interp,cmd_data);
 }

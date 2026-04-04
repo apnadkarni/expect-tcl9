@@ -21,6 +21,7 @@ NIST would appreciate credit if this program or parts of it are used.
 #endif
 
 #include "tcl.h"
+#include "exp_int.h"
 #include "exp_prog.h"
 #include "exp_command.h"	/* for ExpState defs */
 #include "exp_log.h"

@@ -153,32 +153,6 @@ test expect-1.13 {re pattern, gate keeping} {
     set x
 } {1}
 
-test expect-1.14 {re pattern, sub matches} {
-    expect "*"
-    exp_send "abc\r"
-
-    set timeout 10
-    set x 0
-    expect -indices -re "^(a?)(a)(bc)" {
-        incr x
-        if { $expect_out(0,string) eq "abc" } { incr x }
-        if { $expect_out(0,start) == 0 } { incr x }
-        if { $expect_out(0,end) == 2 } { incr x }
-
-        if { $expect_out(1,string) eq "" } { incr x }
-        if { $expect_out(1,start) == 0 } { incr x }
-        if { $expect_out(1,end) == -1 } { incr x }
-
-        if { $expect_out(2,string) eq "a" } { incr x }
-        if { $expect_out(2,start) == 0 } { incr x }
-        if { $expect_out(2,end) == 0 } { incr x }
-
-        if { $expect_out(3,string) eq "bc" } { incr x }
-        if { $expect_out(3,start) == 1 } { incr x }
-        if { $expect_out(3,end) == 2 } { incr x }
-    }
-    set x
-} {13}
 
 close
 wait

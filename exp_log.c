@@ -85,7 +85,7 @@ expWriteBytesAndLogIfTtyU(esPtr,buf,lenChars)
     Tcl_UniChar *buf;
     int lenChars;
 {
-    int wc;
+    int wc = 0;
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
     if (esPtr->valid)
