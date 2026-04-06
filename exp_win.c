@@ -30,10 +30,14 @@ case, for example, on SunOS 4.1.3 using gcc where termios.h
 conflicts with sys/ioctl.h
  */
 
+#ifdef HAVE_DARWIN
+#  include <sys/ioctl.h>
+#else
 #ifdef HAVE_TERMIOS
 #  include <termios.h>
 #else
 #  include <sys/ioctl.h>
+#endif
 #endif
 
 /* Sigh.  On AIX 2.3, termios.h exists but does not define TIOCGWINSZ */
