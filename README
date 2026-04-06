@@ -1,5 +1,5 @@
-This is a port of Expect for Tcl 9 with contributions from Paul
-Obermeier, Bernhard Rosenkränzer (OpenMadriva) and Ashok P. Nadkarni.
+This is a port of Expect for Tcl 9 with contributions from Steve Shaw,
+Paul Obermeier, OpenMandriva (Bernhard Rosenkränzer) and Ashok P. Nadkarni.
 
 Consider this a work-in-progress and not production-ready.
 
