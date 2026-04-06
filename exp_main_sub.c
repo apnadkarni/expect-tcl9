@@ -49,8 +49,8 @@ char exp_version[] = PACKAGE_VERSION;
 #define NEED_TCL_MINOR		5
 
 const char *exp_argv0 = "this program";	/* default program name */
-void (*exp_app_exit)() = 0;
-void (*exp_event_exit)() = 0;
+void (*exp_app_exit)(Tcl_Interp *) = 0;
+void (*exp_event_exit)(Tcl_Interp *) = 0;
 FILE *exp_cmdfile = 0;
 const char *exp_cmdfilename = 0;
 int exp_cmdlinecmds = FALSE;
@@ -394,7 +394,7 @@ exp_interpreter(
 	commandPtr = Tcl_NewObj();
 	Tcl_IncrRefCount(commandPtr);
 	switch (code) {
-	    char *str;
+	    const char *str;
 
 	    case TCL_OK:
 	        str = Tcl_GetStringResult(interp);
@@ -887,7 +887,7 @@ static void
 print_result (
     Tcl_Interp* interp)
 {
-    char* msg = Tcl_GetStringResult (interp);
+    const char* msg = Tcl_GetStringResult (interp);
     if (msg[0] != 0) {
 	expErrorLogU(msg);
 	expErrorLogU("\r\n");

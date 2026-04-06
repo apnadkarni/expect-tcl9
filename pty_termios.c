@@ -103,6 +103,10 @@ with openpty which supports 4000 while ptmx supports 60. */
 #  include <sys/stropts.h>
 #endif
 
+#ifdef HAVE_DARWIN
+#  include <util.h>
+#endif
+
 #include "exp_win.h"
 
 #include "exp_tty_in.h"
@@ -270,7 +274,7 @@ pty_stty(
 {
 #define MAX_ARGLIST 10240
 	char buf[MAX_ARGLIST];	/* overkill is easier */
-	RETSIGTYPE (*old)();	/* save old sigalarm handler */
+	RETSIGTYPE (*old)(int);	/* save old sigalarm handler */
 
 #ifdef STTY_READS_STDOUT
 	sprintf(buf,"%s %s > %s",STTY_BIN,s,name);

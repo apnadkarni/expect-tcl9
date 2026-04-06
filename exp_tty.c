@@ -18,9 +18,6 @@
 #endif
 #include <sys/types.h>
 
-/* Needed for Mac */
-#include <termios.h>
-
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -581,7 +578,7 @@ Exp_SystemCmd(
     const char **argv)
 {
 	int result = TCL_OK;
-	RETSIGTYPE (*old)();	/* save old sigalarm handler */
+	RETSIGTYPE (*old)(int);	/* save old sigalarm handler */
 #define MAX_ARGLIST 10240
 	int i;
 
