@@ -31,9 +31,6 @@ would appreciate credit if this program or parts of it are used.
 # endif
 #endif
 
-/* Needed for Mac */
-#include <termios.h>
-
 #include <signal.h>
 #include <setjmp.h>
 #include <sys/file.h>
@@ -137,7 +134,7 @@ i_read(
 	return(cc);
 }
 
-static RETSIGTYPE (*oldAlarmHandler)();
+static RETSIGTYPE (*oldAlarmHandler)(int);
 #ifndef O_NOCTTY
 static RETSIGTYPE (*oldHupHandler)();
 #endif
