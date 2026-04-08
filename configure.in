@@ -433,6 +433,17 @@ if test $iunix -eq 1 ; then
 	])
 fi
 
+AC_MSG_CHECKING([if on Darwin])
+if test "x`(uname -s) 2>/dev/null`" = xDarwin; then
+  AC_MSG_RESULT(yes)
+  AC_DEFINE(HAVE_DARWIN, 1, [Operating system])
+  AC_DEFINE(NO_UNION_WAIT)
+  darwin=1
+else
+  AC_MSG_RESULT(no)
+  darwin=0
+fi
+
 ######################################################################
 #
 # Look for various header files
@@ -454,6 +465,7 @@ AC_CHECK_FUNC(siglongjmp, AC_DEFINE(HAVE_SIGLONGJMP))
 # autoconf's automatic test that is a call with no arguments
 AC_MSG_CHECKING([for memcpy])
 AC_TRY_LINK(,[
+#include <string.h>
 char *s1, *s2;
 memcpy(s1,s2,0);
 ],
@@ -765,6 +777,7 @@ if test $mach -eq 0 ; then
 #  ifdef HAVE_INTTYPES_H
 #  include <inttypes.h>
 #  endif
+#  include <stdlib.h>
 #  include <termios.h> 
   int main()
   {
@@ -1030,7 +1043,7 @@ TEA_ADD_INCLUDES([-I.])
 TEA_ADD_INCLUDES([-I\"`\${CYGPATH} \${srcdir}`\"])
 
 TEA_ADD_LIBS([])
-TEA_ADD_CFLAGS([-DTCL_DEBUGGER -DUSE_NON_CONST])
+TEA_ADD_CFLAGS([-DTCL_DEBUGGER])
 TEA_ADD_CFLAGS([-DSCRIPTDIR=\\\"\${DESTDIR}\${prefix}/lib/\${PKG_DIR}\\\"])
 TEA_ADD_CFLAGS([-DEXECSCRIPTDIR=\\\"\${DESTDIR}\${pkglibdir}\\\"])
 TEA_ADD_CFLAGS([-DSTTY_BIN=\\\"${STTY_BIN}\\\"])

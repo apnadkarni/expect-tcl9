@@ -1378,7 +1378,7 @@ simple_interactor(Tcl_Interp *interp, ClientData data)
 		switch (rc) {
 		case TCL_OK:
 	    {
-		char* res = Tcl_GetStringResult (interp);
+		const char* res = Tcl_GetStringResult (interp);
 		if (*res != 0)
 		    print(interp,"%s\n",res);
 	    }

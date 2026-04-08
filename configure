@@ -9467,6 +9467,23 @@ fi
 
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if on Darwin" >&5
+printf %s "checking if on Darwin... " >&6; }
+if test "x`(uname -s) 2>/dev/null`" = xDarwin; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+
+printf "%s\n" "#define HAVE_DARWIN 1" >>confdefs.h
+
+  printf "%s\n" "#define NO_UNION_WAIT 1" >>confdefs.h
+
+  darwin=1
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+  darwin=0
+fi
+
 ######################################################################
 #
 # Look for various header files
@@ -9530,6 +9547,7 @@ int
 main (void)
 {
 
+#include <string.h>
 char *s1, *s2;
 memcpy(s1,s2,0);
 
@@ -10066,6 +10084,7 @@ else $as_nop
 #  ifdef HAVE_INTTYPES_H
 #  include <inttypes.h>
 #  endif
+#  include <stdlib.h>
 #  include <termios.h>
   int main()
   {
@@ -10615,7 +10634,7 @@ LIBS="$LIBS $LD_SEARCH_FLAGS"
 
 
 
-    PKG_CFLAGS="$PKG_CFLAGS -DTCL_DEBUGGER -DUSE_NON_CONST"
+    PKG_CFLAGS="$PKG_CFLAGS -DTCL_DEBUGGER"
 
 
 

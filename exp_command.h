@@ -222,8 +222,8 @@ EXTERN int		exp_trap_off (const char *);
 
 EXTERN void		exp_strftime(char *format, const struct tm *timeptr,Tcl_DString *dstring);
 
-#define exp_deleteProc (void (*)())0
-#define exp_deleteObjProc (void (*)())0
+#define exp_deleteProc (void (*)(void *))0
+#define exp_deleteObjProc (void (*)(void *))0
 
 EXTERN int expect_key;
 EXTERN int exp_configure_count;	/* # of times descriptors have been closed */
