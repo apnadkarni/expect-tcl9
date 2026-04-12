@@ -23,11 +23,10 @@ on:
         type: choice
         options:
           - '["ubuntu-latest"]'
-          - '["ubuntu-20.04"]'
           - '["ubuntu-22.04"]'
           - '["ubuntu-24.04"]'
-          - '["ubuntu-20.04", "ubuntu-22.04", "ubuntu-24.04"]'
-        default: '["ubuntu-20.04", "ubuntu-22.04", "ubuntu-24.04"]'
+          - '["ubuntu-22.04", "ubuntu-24.04"]'
+        default: '["ubuntu-22.04", "ubuntu-24.04"]'
       run-tests: # Whether tests should be run
         description: 'Run tests as well'
         required: false
@@ -47,12 +46,12 @@ jobs:
 
     - name: Setup Tcl
       id: tcl-setup-step
-      uses: apnadkarni/tcl-setup@v1
+      uses: apnadkarni/tcl-setup@v2
       with:
         tcl-tag: ${{ matrix.tcl-tag }}
 
     - name: Build extension
       id: tcl-build-step
-      uses: apnadkarni/tcl-build-extension@v1
+      uses: apnadkarni/tcl-build-extension@v2
       with:
         run-tests: ${{ inputs.run-tests }}
