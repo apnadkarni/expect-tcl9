@@ -2301,8 +2301,12 @@ expMatchProcess(
 
 				/* string itself */
 		sprintf(name,"%d,string",i);
-		val = Tcl_GetRange(buf, start, end);
-		expDiagLog("%s: set %s(%s) \"",detail,EXPECT_OUT,name);
+		if (end >= start) {
+		    val = Tcl_GetRange(buf, start, end);
+		} else {
+		    val = Tcl_NewStringObj("", 0);
+		}
+		expDiagLog("%s: set %s(%s) \"", detail, EXPECT_OUT, name);
 		expDiagLogU(expPrintifyObj(val));
 		expDiagLogU("\"\r\n");
 		Tcl_SetVar2Ex(interp,EXPECT_OUT,name,val,(bg ? TCL_GLOBAL_ONLY : 0));
