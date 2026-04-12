@@ -1,0 +1,58 @@
+name: mac
+
+on:
+  workflow_dispatch:
+    inputs:
+      tcl-tags:  # User input for selecting Tcl tag
+        description: 'Tcl version'
+        required: true
+        type: choice
+        options:
+          - '["core-9-0-0"]'
+          - '["core-9-0-2"]'
+          - '["core-8-6-10"]'
+          - '["core-8-6-17"]'
+          - '["main"]'
+          - '["core-9-0-branch"]'
+          - '["core-8-6-branch"]'
+          - '["core-8-6-10", "core-9-0-0"]'
+          - '["core-8-6-10", "core-8-6-17", "core-9-0-0", "core-9-0-2"]'
+        default: '["core-8-6-10", "core-9-0-0"]'
+      runners:  # User input for selecting OS
+        description: 'OS version'
+        required: true
+        type: choice
+        options:
+          - '["macos-latest"]'
+          - '["macos-14"]'
+          - '["macos-15"]'
+          - '["macos-14", "macos-15]'
+        default: '["macos-latest"]'
+      run-tests: # Whether tests should be run
+        description: 'Run tests as well'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        runner-os: ${{ fromJSON(github.event.inputs.runners) }}
+        tcl-tag: ${{ fromJSON(github.event.inputs.tcl-tags) }}
+    runs-on: ${{ matrix.runner-os }}
+
+    steps:
+
+    - name: Setup Tcl
+      id: tcl-setup-step
+      uses: apnadkarni/tcl-setup@v2
+      with:
+        tcl-tag: ${{ matrix.tcl-tag }}
+
+    - name: Build extension
+      id: tcl-build-step
+      uses: apnadkarni/tcl-build-extension@v2
+      with:
+        run-tests: ${{ inputs.run-tests }}
+
