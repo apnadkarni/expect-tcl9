@@ -361,7 +361,7 @@ exec_stty(
 
 #ifdef STTY_READS_STDOUT
 	if (rc == TCL_ERROR) {
-		char *ec = Tcl_GetVar(interp,"errorCode",TCL_GLOBAL_ONLY);
+		const char *ec = Tcl_GetVar(interp,"errorCode",TCL_GLOBAL_ONLY);
 		if (ec && !streq(ec,"NONE")) return TCL_ERROR;
 	}
 #else
@@ -388,7 +388,7 @@ Exp_SttyCmd(
 	int cooked = FALSE;
 	int was_raw, was_echo;
 
-	const char **redirect;	/* location of "<" */
+	char **redirect;	/* location of "<" */
 	const char *infile = 0;
 	int fd;			/* (slave) fd of infile */
 	int master = -1;	/* master fd of infile */
@@ -396,7 +396,7 @@ Exp_SttyCmd(
 
 	for (argv=argv0+1;*argv;argv++) {
 		if (argv[0][0] == '<') {
-			redirect = argv;
+			redirect = (char **)argv;
 			infile = *(argv+1);
 			if (!infile) {
 				expErrorLog("usage: < ttyname");
@@ -513,7 +513,7 @@ Exp_SttyCmd(
 		/* a different tty */
 
 		/* temporarily zap redirect */
-		const char *redirect_save = *redirect;
+		char *redirect_save = *redirect;
 		*redirect = 0;
 
 		for (argv=argv0+1;*argv;argv++) {
