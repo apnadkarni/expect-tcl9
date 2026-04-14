@@ -3,22 +3,25 @@ Paul Obermeier, OpenMandriva (Bernhard Rosenkränzer) and Ashok P. Nadkarni.
 
 Consider this a work-in-progress and not production-ready.
 
-The code currently only builds on Tcl 9. Future support for 8.6
-may or may not be added. Version has been bumped to 6.0a0 as C
+The code currently builds on Tcl 8.6 and 9.x. Older versions of Tcl
+are not supported. Version has been bumped to 6.0a0 as C
 API may have some incompatibilities (due to const considerations).
-This is temporary.
+For older releases, see the following repositories:
+
+- https://core.tcl-lang.org/expect/index
+- https://sourceforge.net/projects/expect/
 
 Following caveats apply:
 
 - due to changes related to ANSI C standard, the C API may *possibly* no
 longer be compatible
-- Only Linux distributions have been tested. Other platforms may not even
-compile.
+- Only Linux distributions have been tested.
 - Only the Tcl extension has been tested, not bindings to other languages
 with libexpect.
 
-
 The original README is below.
+
+---
 
 NOTE: ALPHA AND BETA RELEASES OF TCL/TK ARE NOT SUPPORTED!
 
