@@ -1,3 +1,26 @@
+IMPORTANT: The repository was force pushed on 2026-05-27 06:46 UTC+5:30,
+commit 3af71bfd, to correctly reflect prior history and contributors.
+(Thanks to @fgaz for the work.) 
+
+To sync your local repository:
+
+```bash
+git fetch origin
+git checkout main
+git reset --hard origin/main
+```
+
+If you have local work you need to preserve, create a backup branch before resetting:
+
+```bash
+git branch my-old-work
+```
+
+If you have a GitHub fork, it would probably be easiest to delete it and fork
+again. Otherwise your fork may continue to point to obsolete commit graphs.
+
+Apologies for the inconvenience.
+
 This is a port of Expect for Tcl 9 with contributions from Steve Shaw,
 Paul Obermeier, OpenMandriva (Bernhard Rosenkränzer) and Ashok P. Nadkarni.
 
