@@ -215,6 +215,19 @@ test expect-1.9 {match null inline} {
     set rc
 } {1}
 
+test expect-bug-9 {Panic on use-after-free} -body {
+    set timeout 5
+    spawn /bin/echo "expect-passed"
+    expect {
+        "expect-passed" {set result PASSED}
+        timeout {set result timeout"}
+        eof {set result eof}
+    }
+    set result
+} -cleanup {
+    catch {unset result}
+} -result PASSED
+
 file delete -force $filename
 
 cleanupTests

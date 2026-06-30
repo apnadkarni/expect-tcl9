@@ -327,8 +327,11 @@ exp_eval_with_one_arg(
 		int r = Tcl_EvalTokensStandard(interp, tokenPtr+1,
 			tokenPtr->numComponents); 
 		Tcl_Obj* w = (r == TCL_OK) ? Tcl_GetObjResult(interp) : NULL;
+		/*
+		 * Tcl_GetObjResult does NOT increment ref count of returned
+		 * Tcl_Obj so do NOT decrement it below! Bug #9.
+		 */
 
-		/* w has refCount 1 here, if not NULL */
 		if (w == NULL) {
 		    Tcl_DecrRefCount (res);
 		    res = NULL;
@@ -336,7 +339,6 @@ exp_eval_with_one_arg(
 
 		}
 		Tcl_ListObjAppendElement (interp, res, w);
-		Tcl_DecrRefCount (w); 
 	    }
 	}
 
