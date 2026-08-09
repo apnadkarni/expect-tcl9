@@ -101,13 +101,15 @@ exp_retoglob (
 #define EMIT(c)  {lastsz = 1; *nexto++ = (c);}
 #define EMITX(c) {lastsz++;   *nexto++ = (c);}
 /* 
- * Tcl 9 porting note: The MATCH in Tcl 8 expect used to call
- * Tcl_UniCharNcmp to do the comparison as Tcl_UniChar was UTF-16 encoded.
- * In Tcl 9, Tcl_UniChar is simply the 32-bit code point. Moreover, since we
- * only care about equality and not greater/less, we can just use memcmp.
- * (Actually the original code could have as well)
+ * Tcl 9 porting note: The MATCH in Tcl 8 expect used to call Tcl_UniCharNcmp to
+ * do the comparison as Tcl_UniChar was UTF-16 encoded. In Tcl 9, Tcl_UniChar is
+ * simply the 32-bit code point. Moreover, since we only care about equality and
+ * not greater/less, we can just use memcmp. (Actually the original code could
+ * have as well)
+ * NOTE: "lit" must be an array of Tcl_UniChar, not a string literal with
+ * terminating nul.
  */
-#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == memcmp (str,(lit),sizeof(lit)/sizeof (Tcl_UniChar))))
+#define MATCH(lit) ((strlen >= (sizeof (lit)/sizeof (Tcl_UniChar))) && (0 == memcmp (str,(lit),sizeof(lit))))
 #define MATCHC(c) (strlen && (*str == (c)))
 #define PUSHPAREN {*nextp++ = nexto;}
 #define UNEMIT {nexto -= lastsz; lastsz = -1;}

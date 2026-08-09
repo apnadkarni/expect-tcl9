@@ -228,6 +228,19 @@ test expect-bug-9 {Panic on use-after-free} -body {
     catch {unset result}
 } -result PASSED
 
+test expect-bug-10 {Truncated regexp match} -body {
+    set re {(?=a)all}
+    spawn sh -c "cat <<'EOF'
+all
+EOF"
+    expect {
+        -re $re {set result PASS}
+        timeout {set result TIMEOUT}
+        eof {set result eof}
+    }
+    set result
+} -result PASS
+
 file delete -force $filename
 
 cleanupTests
